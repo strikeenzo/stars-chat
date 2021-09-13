@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -17,14 +18,20 @@ import {
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {
+  Constants,
+  GStyle,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import Achievements from '../../components/profile/Achievements';
-import PlaceHolder from './PlaceHolder';
 
 import avatars from '../../assets/avatars';
 import CachedImage from '../../components/CachedImage';
+import PostPure from './PostPure';
 
 const ic_plus_1 = require('../../assets/images/Icons/ic_plus_1.png');
 const ic_message = require('../../assets/images/Icons/ic_menu_messages.png');
@@ -39,6 +46,7 @@ class ProfileOtherScreen extends React.Component {
   constructor(props) {
     super(props);
     this.init();
+    this.flatListRef = React.createRef();
   }
 
   componentDidMount() {
@@ -51,6 +59,9 @@ class ProfileOtherScreen extends React.Component {
       posts: [],
       opponentUser: null,
       isLoading: false,
+      onEndReachedDuringMomentum: true,
+      totalCount: 0,
+      curPage: 1,
     };
   };
 
@@ -87,35 +98,55 @@ class ProfileOtherScreen extends React.Component {
     });
   };
 
-  loadPosts = () => {
+  loadPosts = (type) => {
+    const countPerPage = 18;
+    const newPage = type === 'more' ? this.state.curPage + 1 : 1;
+    this.setState({ curPage: newPage });
+    if (type === 'more') {
+      const maxPage = (this.state.totalCount + countPerPage - 1) / countPerPage;
+      if (newPage > maxPage) {
+        return;
+      }
+    }
+    this.setState({ curPage: newPage, isLoading: true });
+
     let params = {
       me_id: global.me ? global.me?.id : 0,
       user_id: global._opponentUser?.id,
-      page_number: 1,
-      count_per_page: 20,
+      page_number: type === 'more' ? newPage : 1,
+      count_per_page: countPerPage,
     };
     this.setState({ isLoading: true });
+
     RestAPI.get_user_post_list(params, (json, err) => {
       this.setState({ isLoading: false });
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
-      } else if (json.status === 200 && json?.data?.postList) {
-        this.setState({
-          posts: json.data.postList || [],
-        });
       } else {
-        Helper.alertServerDataError();
+        if (json.status === 200) {
+          this.setState({ totalCount: json.data?.totalCount || 0 });
+          const list = json.data.postList || [];
+
+          if (type === 'more') {
+            let data = this.state.posts.concat(list);
+            this.setState({ posts: data });
+          } else {
+            this.setState({ posts: list });
+          }
+        } else {
+          Helper.alertServerDataError();
+        }
       }
     });
   };
 
-  onRefresh = () => {
-    if (!global._opponentUser?.id) {
-      return;
-    }
+  onRefresh = (type) => {
+    if (!global._opponentUser?.id || this.state.isLoading) return;
+    console.log('refresging...');
+
     this.loadProducts();
-    this.loadPosts();
+    this.loadPosts(type);
   };
 
   onPressVideo = (value) => {
@@ -167,7 +198,7 @@ class ProfileOtherScreen extends React.Component {
   };
 
   render() {
-    const { isLoading, opponentUser, posts, products } = this.state;
+    const { opponentUser, posts, products } = this.state;
 
     return (
       <>
@@ -175,17 +206,17 @@ class ProfileOtherScreen extends React.Component {
         <SafeAreaView style={styles.container}>
           {this._renderHeader()}
           {this._renderAvartar()}
-          {!isLoading && opponentUser ? (
+          {opponentUser && (
             <>
-              <ScrollView>
-                <Achievements opponentUser={opponentUser} />
-                {!!products?.length && this._renderVideo()}
+              {/* <ScrollView> */}
+              <Achievements opponentUser={opponentUser} />
+              {!!products?.length && this._renderVideo()}
+              <View style={{ flexGrow: 1 }}>
                 {!!posts?.length && this._renderPosts()}
-              </ScrollView>
+              </View>
+              {/* </ScrollView> */}
               {this._renderBottom()}
             </>
-          ) : (
-            <PlaceHolder />
           )}
         </SafeAreaView>
       </>
@@ -280,6 +311,11 @@ class ProfileOtherScreen extends React.Component {
               <TouchableOpacity style={styles.buttonCopy}>
                 <Text style={GStyles.elementLabel}>Copy</Text>
               </TouchableOpacity>
+              {opponentUser?.isVerified && (
+                <Text style={[GStyles.elementLabel, styles.verified]}>
+                  Verified
+                </Text>
+              )}
             </View>
           </View>
         )}
@@ -326,38 +362,49 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderPosts = () => {
-    const { posts } = this.state;
+    const { posts, onEndReachedDuringMomentum, isLoading } = this.state;
+    console.log('posts', posts.length);
+
+    const PostFooter = () =>
+      this.state.isLoading && (
+        <ActivityIndicator style={{ color: '#000', paddingTop: 10 }} />
+      );
 
     return (
       <View style={styles.listContainer}>
         <Text style={[GStyles.regularText, GStyles.boldText]}>Posts</Text>
         <View style={styles.videosWrapper}>
-          {posts?.map((item, i) => {
-            return (
-              <View
-                key={i}
-                style={[styles.listItem, { marginLeft: i % 3 === 0 ? 0 : 5 }]}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressPost(item.id);
-                  }}
-                >
-                  <FastImage
-                    source={{
-                      uri: item.thumb || '',
-                    }}
-                    resizeMode={FastImage.resizeMode.cover}
-                    style={{
-                      width: CELL_WIDTH,
-                      aspectRatio: 1,
-                      backgroundColor: '#ccc',
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+          <FlatList
+            ref={this.flatListRef}
+            numColumns={3}
+            onRefresh={() => this.onRefresh('pull')}
+            refreshing={isLoading}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={PostFooter}
+            onMomentumScrollBegin={() => {
+              console.log('scrolling...');
+              this.setState({ onEndReachedDuringMomentum: false });
+            }}
+            onMomentumScrollEnd={() =>
+              this.setState({ onEndReachedDuringMomentum: true })
+            }
+            onEndReached={() => {
+              console.log('end of list', onEndReachedDuringMomentum);
+              !onEndReachedDuringMomentum && this.onRefresh('more');
+            }}
+            data={posts}
+            renderItem={({ item, index }) => (
+              <PostPure
+                item={item}
+                index={index}
+                onPressPost={this.onPressPost}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 10 }}
+            style={{ flex: 1, height: 440 }}
+          />
         </View>
       </View>
     );
@@ -434,6 +481,15 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 4,
     overflow: 'hidden',
+  },
+  verified: {
+    marginLeft: 12,
+    padding: 4,
+    borderColor: GStyle.greenColor,
+    borderRadius: 4,
+    overflow: 'hidden',
+    backgroundColor: '#32CD32',
+    color: 'white',
   },
 });
 

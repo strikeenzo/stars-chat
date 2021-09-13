@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "674533574187-rshvjl2iuo6j988em4ndd16sa8uslq51.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stars.android",
+            "certificate_hash": "71ca8f939f4f3ccf79ccf786298e93b26e913643"
+          }
+        },
+        {
+          "client_id": "674533574187-uno3kvm2sac6er5e88ijie1gq0fck4kk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stars.android",
+            "certificate_hash": "cb9c777b2caa5ee15cc6a9e43d7565426c6e5ca7"
+          }
+        },
+        {
           "client_id": "674533574187-h7nee3bdjd2fjh28msg1q94l0shogsit.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +45,14 @@
             {
               "client_id": "674533574187-h7nee3bdjd2fjh28msg1q94l0shogsit.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "674533574187-l3mg41s382fu617sus819glh9miihd6b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.odelan.stars",
+                "app_store_id": "1543058540"
+              }
             }
           ]
         }

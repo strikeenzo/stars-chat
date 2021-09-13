@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScrollableTabView, {
@@ -9,6 +9,11 @@ import ScrollableTabView, {
 import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
 import TeamTab from './TeamTab';
 import GHeaderBar from '../../components/GHeaderBar';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { color } from 'react-native-reanimated';
+import CachedImage from '../../components/CachedImage';
+import formatNumber from '../../utils/Global/formatNumber';
+const ic_flame = require('../../assets/images/Icons/ic_flame.png');
 
 class TeamsScreen extends React.Component {
   constructor(props) {
@@ -82,6 +87,7 @@ class TeamsScreen extends React.Component {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         {this._renderHeader()}
+
         <ScrollableTabView
           initialPage={0}
           tabBarBackgroundColor="white"
@@ -89,13 +95,18 @@ class TeamsScreen extends React.Component {
           tabBarInactiveTextColor={'black'}
           tabBarActiveTextColor={GStyle.activeColor}
           tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
-          renderTabBar={(props) => {
-            return (
-              <View style={[GStyles.rowBetweenContainer, { paddingRight: 16 }]}>
-                <ScrollableTabBar {...props} style={styles.scrollBar} />
-              </View>
-            );
-          }}
+          renderTabBar={(header) => (
+            <View style={[GStyles.rowBetweenContainer, { paddingRight: 16 }]}>
+              <ScrollableTabBar
+                {...header}
+                tabs={header.tabs.map(
+                  (t, i) =>
+                    `${t}\n\n${formatNumber(teams[i].totalElixirFlame)}`,
+                )}
+                style={styles.scrollBar}
+              />
+            </View>
+          )}
         >
           {teams.map((team, index) => (
             <TeamTab tabLabel={team.name} team={team} key={index.toString()} />
@@ -117,6 +128,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
     marginRight: 16,
+  },
+  tabBar: {
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    backgroundColor: GStyle.snowColor,
+    borderRadius: 5,
+    marginLeft: 15,
   },
 });
 

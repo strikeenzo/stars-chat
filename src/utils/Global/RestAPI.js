@@ -179,6 +179,11 @@ const RestAPI = {
   get_random_video: (params, callBack) => {
     formDataCall('api/video/random', {}, {}, callBack, 'get');
   },
+
+  get_top_page_text: (params, callBack) => {
+    formDataCall('api/topPage/text', {}, {}, callBack, 'get');
+  },
+
   get_room_list: (params, callBack) => {
     const data = {
       userId: params.user_id,
@@ -311,12 +316,16 @@ const RestAPI = {
   },
   get_top_user_list: (params, callBack) => {
     const data = {
-      sortBy: params.sortBy || 'elixir',
-      page: params.page_number,
-      amount: params.count_per_page,
+      sortBy: params?.sortBy || 'elixir',
+      page: params?.page_number,
+      amount: params?.count_per_page,
     };
 
     formDataCall('api/user/topUsers', data, {}, callBack, 'get');
+  },
+
+  get_all_users: (params, callBack) => {
+    formDataCall('api/user/topSelectedUsers', {}, {}, callBack, 'get');
   },
 
   update_video_view: (params, callBack) => {

@@ -1,22 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { Constants, Helper, RestAPI } from '../../utils/Global';
-import GStyle, { GStyles } from '../../utils/Global/Styles';
-import ProductsList from '../../components/elements/ProductsList';
-import ExploreUserItem from '../../components/elements/ExploreUserItem';
+import { GStyles } from '../../utils/Global/Styles';
 import TopUserItem from '../../components/elements/TopUserItem';
 
-const HomeVideoScreen = (props) => {
-  const { team } = props;
+const HomeVideoScreen = ({ team }) => {
   const navigation = useNavigation();
   const flatListRef = useRef(null);
   const [isFetching, setIsFetching] = useState(false);
@@ -103,16 +93,16 @@ const HomeVideoScreen = (props) => {
           <FlatList
             ref={flatListRef}
             showsVerticalScrollIndicator={false}
-            onRefresh={() => {
-              onRefresh('pull');
-            }}
+            onRefresh={() => onRefresh('pull')}
             refreshing={isFetching}
             ListFooterComponent={_renderFooter}
             onEndReachedThreshold={0.4}
             onMomentumScrollBegin={() => {
+              console.log('scrolling...');
               setOnEndReachedDuringMomentum(false);
             }}
             onEndReached={() => {
+              console.log('ended');
               if (!onEndReachedDuringMomentum) {
                 setOnEndReachedDuringMomentum(true);
                 onRefresh('more');
@@ -125,7 +115,6 @@ const HomeVideoScreen = (props) => {
         ) : (
           <View style={{ flex: 1, ...GStyles.centerAlign }}>
             <Text style={GStyles.notifyDescription}>
-              {' '}
               {isFetching ? '' : 'Not found.'}
             </Text>
           </View>
@@ -163,7 +152,7 @@ const HomeVideoScreen = (props) => {
   return (
     <>
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        {team?.description && _renderDescription()}
+        {team?.description ? _renderDescription() : null}
         {_renderUserList()}
       </View>
     </>

@@ -10,6 +10,7 @@
 		<string>applinks:5pktq.test-app.link</string>
 		<string>applinks:5pktq-alternate.app.link</string>
 		<string>applinks:5pktq-alternate.test-app.link</string>
+		<string>webcredentials:example.com</string>
 	</array>
 </dict>
 </plist>

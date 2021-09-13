@@ -11,48 +11,10 @@ buildscript {
 apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 
 apply plugin: "com.android.application"
-apply plugin: 'ly.img.android.sdk'
 apply plugin: 'kotlin-android'
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
 
 apply plugin: 'com.google.gms.google-services'
-
-// Comment out the modules you don't need, to save size.
-imglyConfig {
-    vesdk {
-        enabled true
-        licencePath 'vesdk_android_license'
-    }
-    modules {
-        include 'ui:video-trim'
-        include 'ui:core'
-        include 'ui:text'
-        include 'ui:focus'
-        include 'ui:frame'
-        include 'ui:brush'
-        include 'ui:filter'
-        include 'ui:sticker'
-        include 'ui:overlay'
-        include 'ui:transform'
-        include 'ui:adjustment'
-        include 'ui:text-design'
-        include 'ui:video-trim'
-        include 'ui:video-library'
-        include 'ui:video-composition'
-        include 'ui:audio-composition'
-
-        // Add the serializer if you need
-        include 'backend:serializer'
-
-        // Add asset packs if you need
-        include 'assets:font-basic'
-        include 'assets:frame-basic'
-        include 'assets:filter-basic'
-        include 'assets:overlay-basic'
-        include 'assets:sticker-shapes'
-        include 'assets:sticker-emoticons'
-    }
-}
 
 import com.android.build.OutputFile
 
@@ -197,7 +159,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 40
-        versionName "2.0.7"
+        versionName "2.0.9"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
         vectorDrawables.useSupportLibrary = true

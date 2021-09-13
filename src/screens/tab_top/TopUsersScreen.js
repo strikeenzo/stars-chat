@@ -22,6 +22,7 @@ import TopUserItem from '../../components/elements/TopUserItem';
 import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view';
+import Avatar from '../../components/elements/Avatar';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 32) / 3.0;
@@ -38,6 +39,7 @@ class TopUsersScreen extends React.Component {
       Helper.setLightStatusBar();
     });
     this.onRefresh('init');
+    this.getSelectedTopUsers();
   }
 
   componentWillUnmount() {
@@ -52,7 +54,28 @@ class TopUsersScreen extends React.Component {
       sortBy: 'elixir',
       itemDatas: [],
       onEndReachedDuringMomentum: true,
+      topPageText: '',
+      topUsers: [],
     };
+  };
+
+  // get random top 5 user
+  getSelectedTopUsers = () => {
+    RestAPI.get_all_users({}, (json, err) => {
+      if (err !== null) {
+        Helper.alertNetworkError();
+      } else {
+        if (json.status === 200) {
+          const profiles = json.data.userList.filter((user) => user?.isTopUser);
+          const shuffled = profiles.sort(() => 0.5 - Math.random());
+          const filteredItems = shuffled.slice(0, 5);
+
+          this.setState({ topUsers: filteredItems });
+        } else {
+          Helper.alertServerDataError();
+        }
+      }
+    });
   };
 
   onRefresh = (type) => {
@@ -96,15 +119,30 @@ class TopUsersScreen extends React.Component {
       } else {
         if (json.status === 200) {
           this.setState({ totalCount: json.data.totalCount });
+          const profiles = json.data.userList.filter(
+            (user) => !user.phone.includes('guest_') && !user?.isBannedTopPage,
+          );
+
           if (type === 'more') {
-            let data = itemDatas.concat(json.data.userList);
+            let data = itemDatas.concat(profiles);
             this.setState({ itemDatas: data });
           } else {
-            this.setState({ itemDatas: json.data.userList });
+            this.setState({ itemDatas: profiles });
           }
         } else {
           Helper.alertServerDataError();
         }
+      }
+    });
+
+    // get top page text
+    RestAPI.get_top_page_text({}, (json) => {
+      if (json.status === 200) {
+        const text = json.data.text[0].text || '';
+
+        this.setState({
+          topPageText: text,
+        });
       }
     });
   };
@@ -143,12 +181,31 @@ class TopUsersScreen extends React.Component {
   }
 
   _renderHeader = () => {
+    const { topPageText, topUsers } = this.state;
+
     return (
-      <GHeaderBar
-        headerTitle="Top Rank"
-        leftType="logo"
-        onPressLeftButton={this.onLogo}
-      />
+      <>
+        <GHeaderBar
+          headerTitle="Top Rank"
+          leftType="logo"
+          onPressLeftButton={this.onLogo}
+        />
+        {topPageText ? (
+          <View style={styles.banner}>
+            <Text style={styles.announcement}>{topPageText}</Text>
+          </View>
+        ) : null}
+        <View style={styles.avatars}>
+          {topUsers.map((item) => (
+            <Avatar
+              key={item.id}
+              image={{ uri: item?.photo }}
+              containerStyle={{ marginLeft: 10 }}
+              onPress={() => this.onPressUser(item)}
+            />
+          ))}
+        </View>
+      </>
     );
   };
 
@@ -261,6 +318,20 @@ class TopUsersScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  announcement: {
+    padding: 10,
+    textAlign: 'center',
+  },
+  avatars: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  banner: {
+    backgroundColor: GStyle.grayBackColor,
+    borderRadius: 8,
+    width: '96%',
+    marginVertical: 10,
+  },
   statisticsWrapper: {
     ...GStyles.centerAlign,
     marginTop: 24,

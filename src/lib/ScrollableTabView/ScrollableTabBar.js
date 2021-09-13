@@ -2,15 +2,8 @@ const React = require('react');
 const { ViewPropTypes } = (ReactNative = require('react-native'));
 const PropTypes = require('prop-types');
 const createReactClass = require('create-react-class');
-const {
-  View,
-  Animated,
-  StyleSheet,
-  ScrollView,
-  Text,
-  Platform,
-  Dimensions,
-} = ReactNative;
+const { View, Animated, StyleSheet, ScrollView, Text, Platform, Dimensions } =
+  ReactNative;
 const Button = require('./Button');
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
