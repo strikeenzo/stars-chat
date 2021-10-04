@@ -26,8 +26,8 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import { connect } from 'react-redux';
 import { setMyUserAction } from '../../redux/me/actions';
-import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 import CachedImage from '../../components/CachedImage';
+import PhoneInput from 'react-native-phone-number-input';
 
 const image_logo = require('../../assets/images/Icons/ic_logo.png');
 const image_google = require('../../assets/images/Icons/ic_google.png');
@@ -57,6 +57,7 @@ class SigninScreen extends React.Component {
       secureTextEntry: !global.debug,
       phoneNumber: '',
       password: '',
+      phoneValue: '',
     };
 
     this.initRef();
@@ -77,7 +78,7 @@ class SigninScreen extends React.Component {
     for (let name in errors) {
       let ref = this[name];
 
-      if (ref && ref.isFocused()) {
+      if (ref && ref?.isFocused()) {
         delete errors[name];
       }
     }
@@ -86,10 +87,10 @@ class SigninScreen extends React.Component {
   };
 
   onChangeText = (text) => {
-    ['phoneNumber', 'password']
+    ['password']
       .map((name) => ({ name, ref: this[name] }))
       .forEach(({ name, ref }) => {
-        if (ref.isFocused()) {
+        if (ref?.isFocused()) {
           this.setState({ [name]: text });
         }
       });
@@ -134,16 +135,22 @@ class SigninScreen extends React.Component {
   };
 
   onSubmit = async () => {
+    console.log('here');
     let { errors = {} } = this.state;
 
     ['phoneNumber', 'password'].forEach((name) => {
-      let value = this[name].value();
+      let value = '';
+      if (name === 'phoneNumber') value = this.state.phoneNumber;
+      else value = this.password.value();
+
+      console.log('phone', value);
 
       if (!value) {
         errors[name] = 'Should not be empty';
       } else {
         if (name === 'phoneNumber') {
           const isValidPhoneNumber = Helper.validatePhoneNumber(value);
+          console.log('isValid', isValidPhoneNumber);
           if (!isValidPhoneNumber) {
             errors[name] = 'Phone Number is invalid';
           }
@@ -242,21 +249,22 @@ class SigninScreen extends React.Component {
 
     return (
       <>
-        <TextField
+        <PhoneInput
           ref={this.phoneNumberRef}
-          keyboardType="phone-pad"
-          autoCapitalize="none"
-          autoCorrect={false}
-          enablesReturnKeyAutomatically={true}
-          onFocus={this.onFocus}
-          onChangeText={this.onChangeText}
-          onSubmitEditing={this.onSubmitPhoneNumber}
-          returnKeyType="next"
-          label="Phone Number"
+          defaultCode="BD"
+          layout="first"
+          onChangeText={(txt) => this.setState({ phoneValue: txt })}
           value={phoneNumber}
-          error={errors.phoneNumber}
-          containerStyle={{ marginTop: 24 }}
+          onChangeFormattedText={(txt) => this.setState({ phoneNumber: txt })}
+          withDarkTheme
+          containerStyle={{
+            marginTop: 50,
+            width: '100%',
+            borderBottomColor: this.state.phoneError ? 'red' : 'lightgrey',
+            borderBottomWidth: 1,
+          }}
         />
+        <Text style={{ color: 'red', fontSize: 12 }}>{errors.phoneNumber}</Text>
         <TextField
           ref={this.passwordRef}
           keyboardType="number-pad"
