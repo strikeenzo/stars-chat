@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -46,7 +45,6 @@ class ProfileOtherScreen extends React.Component {
   constructor(props) {
     super(props);
     this.init();
-    this.flatListRef = React.createRef();
   }
 
   componentDidMount() {
@@ -59,7 +57,6 @@ class ProfileOtherScreen extends React.Component {
       posts: [],
       opponentUser: null,
       isLoading: false,
-      onEndReachedDuringMomentum: true,
       totalCount: 0,
       curPage: 1,
     };
@@ -362,7 +359,7 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderPosts = () => {
-    const { posts, onEndReachedDuringMomentum, isLoading } = this.state;
+    const { posts, isLoading } = this.state;
     console.log('posts', posts.length);
 
     const PostFooter = () =>
@@ -375,22 +372,16 @@ class ProfileOtherScreen extends React.Component {
         <Text style={[GStyles.regularText, GStyles.boldText]}>Posts</Text>
         <View style={styles.videosWrapper}>
           <FlatList
-            ref={this.flatListRef}
+            ref={(ref) => {
+              this.flatListRef = ref;
+            }}
             numColumns={3}
             onRefresh={() => this.onRefresh('pull')}
             refreshing={isLoading}
-            onEndReachedThreshold={0.2}
+            onEndReachedThreshold={0}
             ListFooterComponent={PostFooter}
-            onMomentumScrollBegin={() => {
-              console.log('scrolling...');
-              this.setState({ onEndReachedDuringMomentum: false });
-            }}
-            onMomentumScrollEnd={() =>
-              this.setState({ onEndReachedDuringMomentum: true })
-            }
             onEndReached={() => {
-              console.log('end of list', onEndReachedDuringMomentum);
-              !onEndReachedDuringMomentum && this.onRefresh('more');
+              this.onRefresh('more');
             }}
             data={posts}
             renderItem={({ item, index }) => (
@@ -403,7 +394,10 @@ class ProfileOtherScreen extends React.Component {
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 10 }}
-            style={{ flex: 1, height: 440 }}
+            // style={{ flex: 1, height: 440 }}
+            style={{
+              height: Constants.WINDOW_HEIGHT - 405.7,
+            }}
           />
         </View>
       </View>
