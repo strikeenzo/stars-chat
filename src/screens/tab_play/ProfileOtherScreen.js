@@ -7,6 +7,7 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 
 import {
@@ -48,7 +49,8 @@ class ProfileOtherScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.onRefresh();
+    this.onRefreshPosts();
+    this.onRefreshProducts();
   }
 
   init = () => {
@@ -57,6 +59,7 @@ class ProfileOtherScreen extends React.Component {
       posts: [],
       opponentUser: null,
       isLoading: false,
+      isEndOfList: false,
       totalCount: 0,
       curPage: 1,
     };
@@ -96,12 +99,14 @@ class ProfileOtherScreen extends React.Component {
   };
 
   loadPosts = (type) => {
+    if (this.state.isEndOfList) return;
     const countPerPage = 18;
     const newPage = type === 'more' ? this.state.curPage + 1 : 1;
     this.setState({ curPage: newPage });
     if (type === 'more') {
       const maxPage = (this.state.totalCount + countPerPage - 1) / countPerPage;
       if (newPage > maxPage) {
+        this.setState({ isEndOfList: true });
         return;
       }
     }
@@ -138,11 +143,22 @@ class ProfileOtherScreen extends React.Component {
     });
   };
 
-  onRefresh = (type) => {
+  onRefreshProducts = () => {
     if (!global._opponentUser?.id || this.state.isLoading) return;
     console.log('refresging...');
 
     this.loadProducts();
+  };
+
+  onRefreshPosts = (type) => {
+    if (
+      !global._opponentUser?.id ||
+      this.state.isLoading ||
+      this.state.isEndOfList
+    )
+      return;
+    console.log('refresging...');
+
     this.loadPosts(type);
   };
 
@@ -359,7 +375,7 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderPosts = () => {
-    const { posts, isLoading } = this.state;
+    const { posts, isLoading, isEndOfList } = this.state;
     console.log('posts', posts.length);
 
     const PostFooter = () =>
@@ -376,12 +392,12 @@ class ProfileOtherScreen extends React.Component {
               this.flatListRef = ref;
             }}
             numColumns={3}
-            onRefresh={() => this.onRefresh('pull')}
-            refreshing={isLoading}
-            onEndReachedThreshold={0}
+            onRefresh={() => this.onRefreshPosts('pull')}
+            refreshing={!isEndOfList && isLoading}
+            onEndReachedThreshold={0.1}
             ListFooterComponent={PostFooter}
             onEndReached={() => {
-              this.onRefresh('more');
+              this.onRefreshPosts('more');
             }}
             data={posts}
             renderItem={({ item, index }) => (
@@ -396,7 +412,9 @@ class ProfileOtherScreen extends React.Component {
             contentContainerStyle={{ paddingBottom: 10 }}
             // style={{ flex: 1, height: 440 }}
             style={{
-              height: Constants.WINDOW_HEIGHT - 405.7,
+              height:
+                Constants.WINDOW_HEIGHT - (Platform.OS === 'ios' ? 405.7 : 360),
+              flex: 1,
             }}
           />
         </View>
