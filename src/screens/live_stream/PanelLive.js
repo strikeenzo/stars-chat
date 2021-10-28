@@ -18,7 +18,7 @@ import ic_close from '../../assets/images/Icons/ic_close.png';
 import CachedImage from '../../components/CachedImage';
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
+const randomImageUrl = 'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
 const PanelLive = (props) => {
   const { onPressStart, liveStatus, mode } = props;

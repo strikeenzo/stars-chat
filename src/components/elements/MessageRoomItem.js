@@ -6,7 +6,7 @@ import Avatar from './Avatar';
 import avatars from '../../assets/avatars';
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
+const randomImageUrl = 'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
 const MessageRoomItem = ({ item, onPress }) => (
   <TouchableOpacity

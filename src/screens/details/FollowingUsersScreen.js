@@ -2,7 +2,6 @@ import React, { forwardRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -108,14 +107,14 @@ class FollowingUsersScreen extends React.Component {
     const { navigation } = this.props;
 
     return (
-      <SafeAreaView style={GStyles.container}>
+      <View style={GStyles.container}>
         <GHeaderBar
           headerTitle="Stars I follow"
           leftType="back"
           navigation={navigation}
         />
         {this._renderUserList()}
-      </SafeAreaView>
+      </View>
     );
   }
 

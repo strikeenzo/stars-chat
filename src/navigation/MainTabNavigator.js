@@ -16,15 +16,15 @@ import avatars from '../assets/avatars';
 import PlayMainScreen from '../screens/tab_play/PlayMainScreen';
 import CachedImage from '../components/CachedImage';
 
-const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
-const ic_tab_play_focused = require('../assets/images/Icons/ic_tab_play_focused.png');
-const ic_tab_home = require('../assets/images/Icons/ic_tab_home.png');
-const ic_tab_home_focused = require('../assets/images/Icons/ic_tab_home_focused.png');
-const ic_tab_top = require('../assets/images/Icons/ic_tab_top.png');
-const ic_tab_top_focused = require('../assets/images/Icons/ic_tab_top_focused.png');
-const ic_tab_liveStream = require('../assets/images/Icons/ic_tab_liveStream.png');
-const ic_tab_liveStream_focused = require('../assets/images/Icons/ic_tab_liveStream_focused.png');
-
+const ic_tab_play = require('../assets/images/Icons/ic_tab_play_bold.png');
+const ic_tab_play_focused = require('../assets/images/Icons/ic_tab_play_focused_bold.png');
+const ic_tab_home = require('../assets/images/Icons/ic_tab_home_bold.png');
+const ic_tab_home_focused = require('../assets/images/Icons/ic_tab_home_focused_bold.png');
+const ic_tab_top = require('../assets/images/Icons/ic_tab_top_bold.png');
+const ic_tab_top_focused = require('../assets/images/Icons/ic_tab_top_focused_bold.png');
+const ic_tab_liveStream = require('../assets/images/Icons/ic_tab_liveStream_bold.png');
+const ic_tab_liveStream_focused = require('../assets/images/Icons/ic_tab_liveStream_focused_bold.png');
+const ic_search = require('../assets/images/Icons/ic_search.png');
 const Tab = createBottomTabNavigator();
 
 let BOTTOM_TAB_HEIGHT = 60 + Helper.getBottomBarHeight();
@@ -100,7 +100,7 @@ const MainTabNavigator = (props) => {
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <CachedImage
-              source={routeName === 'home' ? ic_tab_home_focused : ic_tab_home}
+              source={routeName === 'home' ? ic_search : ic_search}
               style={styles.tabIconImage}
             />
           ),
@@ -139,7 +139,7 @@ const MainTabNavigator = (props) => {
           tabBarLabel: 'Me',
           tabBarIcon: ({ color, size }) => {
             const randomNumber = Math.floor(Math.random() * avatars.length);
-            const randomImageUrl = avatars[randomNumber];
+            const randomImageUrl = 'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
             const avatarImage = { uri: global.me?.photo ?? randomImageUrl };
             return (

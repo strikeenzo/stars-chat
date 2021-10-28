@@ -56,6 +56,13 @@ class MessageChatScreen extends Component {
     this.onRefresh('init');
   };
 
+  checkIfBlockedMe = (thisUser) => {
+    return thisUser?.blockList?.some(r => r == global.me?.id)
+  }
+
+  checkIfBlocked = (thisUser) => {
+    return global.me?.blockList?.some(r => r === thisUser?.id)
+  }
   onRefresh = (type) => {
     let { isFetching, totalCount, messages, opponentUser } = this.state;
 
@@ -261,7 +268,13 @@ class MessageChatScreen extends Component {
   };
 
   _renderInput = () => {
-    return <WriteMessage onPressSend={this.onSend} />;
+    if(this.checkIfBlockedMe(this.state?.opponentUser)) {
+      return <Text style={{textAlign: 'center'}}>Cannot contact user</Text>
+    } else if (this.checkIfBlocked(this.state?.opponentUser)) {
+      return <Text style={{textAlign: 'center'}}>You have blocked this user</Text>
+    } else {
+      return <WriteMessage onPressSend={this.onSend} />;
+    }
   };
 
   _renderChat = () => {

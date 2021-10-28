@@ -407,6 +407,22 @@ const RestAPI = {
       'get',
     );
   },
+
+  block_member: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      blockedUserId: params.blockedUserId
+    };
+    formDataCall('api/user/block', data, {}, callBack, 'put');
+  },
+
+  unblock_member: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      blockedUserId: params.blockedUserId
+    };
+    formDataCall('api/user/unblock', data, {}, callBack, 'put');
+  },
 };
 
 export default RestAPI;

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -28,11 +27,11 @@ class FCRecoverPasswordSuccessScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={GStyles.centerContainer}>
+      <View style={GStyles.centerContainer}>
         {this._renderImage()}
         {this._renderMessage()}
         {this._renderButton()}
-      </SafeAreaView>
+      </View>
     );
   }
 

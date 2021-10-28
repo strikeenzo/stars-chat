@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import {
   NavigationContext,
@@ -100,11 +100,10 @@ class CameraDraftScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={[GStyles.container]}>
+        <View style={[GStyles.container]}>
           {this._renderHeader()}
           {this._renderVideo()}
-        </SafeAreaView>
+        </View>
       </>
     );
   }

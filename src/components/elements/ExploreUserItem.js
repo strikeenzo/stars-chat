@@ -6,7 +6,7 @@ import Avatar from './Avatar';
 import avatars from '../../assets/avatars';
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
+const randomImageUrl = 'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
 const ExploreUserItem = ({ item, onPress }) => {
   const displayName = item?.userType === 0 ? item?.displayName : item?.username;
@@ -36,7 +36,7 @@ const ExploreUserItem = ({ item, onPress }) => {
                 GStyles.mediumText,
                 GStyles.boldText,
                 GStyles.upperCaseText,
-                { marginHorizontal: 12 },
+                { marginHorizontal: 12, color: '#D2D2D2' },
               ]}
             >
               {displayName}

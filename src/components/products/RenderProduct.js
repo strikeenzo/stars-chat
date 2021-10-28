@@ -24,9 +24,7 @@ const ic_support = require('../../assets/images/Icons/ic_support.png');
 const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
-
-const VIDEO_HEIGHT = Dimensions.get('window').height;
+const randomImageUrl = 'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
 class RenderProducts extends PureComponent {
   constructor(props) {
@@ -34,7 +32,24 @@ class RenderProducts extends PureComponent {
     this.state = {
       lastPress: 0,
       showHeart: false,
+      paused: false,
     };
+    this.player = React.createRef();
+  }
+
+  componentWillUpdate(
+    nextProps: Readonly<P>,
+    nextState: Readonly<S>,
+    nextContext: any,
+  ) {
+    const { curIndex, index, isVideoPause } = nextProps;
+    const { paused } = this.state;
+
+    const inactive = isVideoPause || curIndex !== index;
+
+    if (paused !== inactive) {
+      this.setState({ paused: inactive });
+    }
   }
 
   onLike = () => {
@@ -61,8 +76,18 @@ class RenderProducts extends PureComponent {
     }
   };
 
+  onReadyForDisplay = () => {
+    const { curIndex, index, isVideoPause } = this.props;
+    const inactive = isVideoPause || curIndex !== index;
+    this.setState({ paused: inactive });
+  };
+
+  onLoadStart = () => {
+    this.setState({ paused: false });
+  };
+
   render() {
-    const { showHeart } = this.state;
+    const { showHeart, paused } = this.state;
     const {
       isVideoPause,
       item,
@@ -70,6 +95,7 @@ class RenderProducts extends PureComponent {
       detailStyle,
       index,
       curIndex,
+      layout,
     } = this.props;
     const user = item.user || {};
     const isLike = !!item.isLiked;
@@ -79,20 +105,35 @@ class RenderProducts extends PureComponent {
 
     return (
       <TouchableOpacity
-        style={styles.container}
+          style={[styles.container, layout]}
         activeOpacity={1}
         onPress={this.onPress}
       >
         <>
-          <Video
-            source={{ uri: Global.convertToHLS(item.url || '') }}
-            repeat
-            paused={isVideoPause || curIndex !== index}
-            poster={item.thumb}
-            resizeMode="contain"
-            posterResizeMode="contain"
-            style={styles.video}
-          />
+          {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
+            <Video
+              source={{
+                uri: Global.convertToHLS(item.url || ''),
+              }}
+              repeat
+              maxBitRate={9000000}
+              paused={paused}
+              muted={paused}
+              poster={item.thumb}
+              resizeMode="contain"
+              posterResizeMode="contain"
+              style={styles.video}
+              onReadyForDisplay={this.onReadyForDisplay}
+              onLoadStart={this.onLoadStart}
+              reportBandwidth={true}
+            />
+          ) : (
+            <CachedImage
+              source={{ uri: item.thumb || '' }}
+              style={styles.video}
+              resizeMode="contain"
+            />
+          )}
           {showHeart && (
             <View style={styles.lottieContainer}>
               <LottieView source={Heart} autoPlay loop style={styles.lottie} />
@@ -217,9 +258,8 @@ class RenderProducts extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: '100%',
-    height: VIDEO_HEIGHT,
+    height: '100%',
     backgroundColor: 'black',
   },
   video: {

@@ -455,7 +455,7 @@ class ProductUploadScreen extends React.Component {
       global.warning('Warning', 'Invalid video.');
       return;
     }
-    if (duration > 30 && global._prevScreen === 'my_products') {
+    if (duration > 31 && global._prevScreen === 'my_products') {
       global.warning(
         'Warning',
         'Sorry the video is too long, max duration is 30 secs.',
@@ -599,23 +599,21 @@ class ProductUploadScreen extends React.Component {
 
   render() {
     return (
-      <>
-        <SafeAreaView style={[GStyles.container, { paddingBottom: 36 }]}>
-          {this._renderHeader()}
-          <KeyboardAwareScrollView
-            showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}
-          >
-            {this._renderVideo()}
-            {this._renderTagInput()}
-            {this._renderMainInputs()}
-            {this._renderCategories()}
-            {this._renderButtons()}
-          </KeyboardAwareScrollView>
-          {this._renderProgress()}
-          {this._renderDialog()}
-        </SafeAreaView>
-      </>
+      <SafeAreaView style={[GStyles.container, { paddingBottom: 36 }]}>
+        {this._renderHeader()}
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          style={GStyles.elementContainer}
+        >
+          {this._renderVideo()}
+          {this._renderTagInput()}
+          {this._renderMainInputs()}
+          {this._renderCategories()}
+          {this._renderButtons()}
+        </KeyboardAwareScrollView>
+        {this._renderProgress()}
+        {this._renderDialog()}
+      </SafeAreaView>
     );
   }
 

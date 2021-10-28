@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Alert,
   BackHandler,
-  SafeAreaView,
   StatusBar,
   View,
 } from 'react-native';
@@ -381,7 +380,7 @@ class GoLive extends React.Component {
     const outputUrl = `${RTMP_SERVER}/live/${streamerId}`;
 
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar hidden />
         <NodeCameraView
           style={[styles.streamerView, mode === 1 && { width: 0, height: 0 }]}
@@ -451,7 +450,7 @@ class GoLive extends React.Component {
         </RBSheet>
         {showHeart && <StaticHeart />}
         {/*<FloatingHearts count={countHeart} />*/}
-      </SafeAreaView>
+      </View>
     );
   }
 }

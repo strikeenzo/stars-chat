@@ -5,6 +5,7 @@ import {
   BackHandler,
   FlatList,
   Platform,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -45,7 +46,7 @@ class PlayMainScreen extends Component {
     this.onRefresh('init');
     global.checkSignIn = this.checkSignIn;
     this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
-      Helper.setDarkStatusBar();
+      // Helper.setDarkStatusBar();
       this.setState({ isVideoPause: false });
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
@@ -74,6 +75,7 @@ class PlayMainScreen extends Component {
       item: {},
       onEndReachedDuringMomentum: true,
       curIndex: 0,
+      layout: { width: 0, height: 0 },
     };
     await Helper.setDeviceId();
   };
@@ -295,7 +297,7 @@ class PlayMainScreen extends Component {
     const { posts } = this.state;
 
     return (
-      <View style={[GStyles.container, styles.container]}>
+      <SafeAreaView style={[GStyles.container, styles.container]}>
         {this.___renderStatusBar()}
         {this._renderVideo()}
         {posts?.length < 1 && this._renderNotFound()}
@@ -322,7 +324,7 @@ class PlayMainScreen extends Component {
             onAddComment={this.onAddComment}
           />
         </RBSheet>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -343,32 +345,42 @@ class PlayMainScreen extends Component {
 
   keyExtractor = (item) => item.id;
 
+  setLayout = (event) => {
+    this.setState({
+      layout: {
+        width: event.nativeEvent.layout?.width,
+        height: event.nativeEvent.layout?.height,
+      },
+    });
+  };
+
   _renderVideo = () => {
     const { isFetching, posts } = this.state;
 
     return (
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        pagingEnabled
-        initialNumToRender={6}
-        maxToRenderPerBatch={6}
-        windowSize={6}
-        onRefresh={this.pullRefresh}
-        refreshing={isFetching}
-        ListFooterComponent={this._renderFooter}
-        onEndReachedThreshold={0.4}
-        onMomentumScrollBegin={this.onMomentumScrollBegin}
-        onEndReached={this.onEndReached}
-        data={posts}
-        renderItem={this._renderItem}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 60,
-        }}
-        removeClippedSubviews={false}
-        onViewableItemsChanged={this.onViewableItemsChanged}
-        keyExtractor={this.keyExtractor}
-        style={{ height: '100%', width: '100%' }}
-      />
+      <View style={styles.flatList} onLayout={this.setLayout}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          pagingEnabled
+          initialNumToRender={3}
+          maxToRenderPerBatch={3}
+          windowSize={7}
+          onRefresh={this.pullRefresh}
+          refreshing={isFetching}
+          ListFooterComponent={this._renderFooter}
+          onEndReachedThreshold={0.4}
+          onMomentumScrollBegin={this.onMomentumScrollBegin}
+          onEndReached={this.onEndReached}
+          data={posts}
+          renderItem={this._renderItem}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 60,
+          }}
+          removeClippedSubviews={false}
+          onViewableItemsChanged={this.onViewableItemsChanged}
+          keyExtractor={this.keyExtractor}
+        />
+      </View>
     );
   };
 
@@ -411,6 +423,7 @@ class PlayMainScreen extends Component {
       curIndex={this.state.curIndex}
       isVideoPause={this.state.isVideoPause}
       actions={this.actions}
+      layout={this.state.layout}
       index={index}
     />
   );
@@ -429,6 +442,11 @@ class PlayMainScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
+  },
+  flatList: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
 

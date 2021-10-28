@@ -3,7 +3,6 @@ import {
   Alert,
   Dimensions,
   Platform,
-  SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -42,7 +41,7 @@ class CameraMainScreen extends Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.setDarkStatusBar();
+     // Helper.setDarkStatusBar();
     });
     this.requestCameraPermission();
   }
@@ -201,10 +200,9 @@ class CameraMainScreen extends Component {
   render() {
     return (
       <>
-        {Platform.OS === 'ios' && <SafeAreaView style={styles.statusBar} />}
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
           {this._renderCamera()}
-        </SafeAreaView>
+        </View>
       </>
     );
   }

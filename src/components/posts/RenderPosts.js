@@ -23,9 +23,8 @@ const ic_comment = require('../../assets/images/Icons/ic_comment.png');
 const ic_share = require('../../assets/images/Icons/ic_share.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
-
-const VIDEO_HEIGHT = Dimensions.get('window').height;
+const randomImageUrl =
+  'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
 class RenderPosts extends PureComponent {
   constructor(props) {
@@ -34,7 +33,24 @@ class RenderPosts extends PureComponent {
       showTexts: false,
       lastPress: 0,
       showHeart: false,
+      paused: false,
     };
+    this.player = React.createRef();
+  }
+
+  componentWillUpdate(
+    nextProps: Readonly<P>,
+    nextState: Readonly<S>,
+    nextContext: any,
+  ) {
+    const { curIndex, index, isVideoPause } = nextProps;
+    const { paused } = this.state;
+
+    const inactive = isVideoPause || curIndex !== index;
+
+    if (paused !== inactive) {
+      this.setState({ paused: inactive });
+    }
   }
 
   onLike = () => {
@@ -66,8 +82,26 @@ class RenderPosts extends PureComponent {
     this.props.actions.onOpenProfileSheet();
   };
 
+  onReadyForDisplay = () => {
+    const { curIndex, index, isVideoPause } = this.props;
+    const inactive = isVideoPause || curIndex !== index;
+    this.setState({ paused: inactive });
+  };
+
+  onLoadStart = () => {
+    this.setState({ paused: false });
+  };
+
+  checkIfBlockedMe = (thisUser) => {
+    return thisUser?.blockList?.some((r) => r == global.me?.id);
+  };
+
+  checkIfBlocked = (thisUser) => {
+    return global?.me?.blockList?.some((r) => r == thisUser?.id);
+  };
+
   render() {
-    const { showHeart, showTexts } = this.state;
+    const { showHeart, showTexts, paused } = this.state;
     const {
       item,
       actions,
@@ -75,28 +109,44 @@ class RenderPosts extends PureComponent {
       isVideoPause,
       curIndex,
       index,
+      layout,
     } = this.props;
+
     const user = item.user || {};
     const isLike = !!item.isLiked;
-
     return (
       <TouchableOpacity
-        style={styles.container}
+        style={[styles.container, layout]}
         activeOpacity={1}
         onPress={this.onPress}
       >
         <>
-          <Video
-            source={{
-              uri: Global.convertToHLS(item.url || ''),
-            }}
-            repeat
-            paused={isVideoPause || curIndex !== index}
-            poster={item.thumb}
-            resizeMode="contain"
-            posterResizeMode="contain"
-            style={styles.video}
-          />
+          {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
+            <Video
+              ref={this.player}
+              source={{
+                uri: Global.convertToHLS(item.url || ''),
+              }}
+              repeat
+              maxBitRate={9000000}
+              paused={paused}
+              muted={paused}
+              poster={item.thumb}
+              resizeMode="contain"
+              posterResizeMode="contain"
+              style={styles.video}
+              onReadyForDisplay={this.onReadyForDisplay}
+              onLoadStart={this.onLoadStart}
+              reportBandwidth={true}
+            />
+          ) : (
+            <CachedImage
+              source={{ uri: item.thumb || '' }}
+              style={styles.video}
+              resizeMode="contain"
+            />
+          )}
+
           {showHeart && (
             <View style={styles.lottieContainer}>
               <LottieView source={Heart} autoPlay loop style={styles.lottie} />
@@ -143,17 +193,23 @@ class RenderPosts extends PureComponent {
               <Text style={GStyles.textSmall}>
                 {typeof item.likeCount === 'number' ? item.likeCount : 0}
               </Text>
-              <TouchableOpacity
-                onPress={this.onPressComments}
-                style={GStyles.videoActionButton}
-              >
-                <CachedImage
-                  source={ic_comment}
-                  style={GStyles.actionIcons}
-                  tintColor={'white'}
-                />
-              </TouchableOpacity>
-              <Text style={GStyles.textSmall}>{item.commentsCount || 0}</Text>
+              {this.checkIfBlockedMe(user) ||
+              this.checkIfBlocked(user) ? null : (
+                <TouchableOpacity
+                  onPress={this.onPressComments}
+                  style={GStyles.videoActionButton}
+                >
+                  <CachedImage
+                    source={ic_comment}
+                    style={GStyles.actionIcons}
+                    tintColor={'white'}
+                  />
+                </TouchableOpacity>
+              )}
+              {this.checkIfBlockedMe(user) ||
+              this.checkIfBlocked(user) ? null : (
+                <Text style={GStyles.textSmall}>{item.commentsCount || 0}</Text>
+              )}
 
               <TouchableOpacity
                 onPress={actions.onPressShare}
@@ -199,9 +255,8 @@ class RenderPosts extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: '100%',
-    height: VIDEO_HEIGHT,
+    height: '100%',
     backgroundColor: 'black',
   },
   topPart: {

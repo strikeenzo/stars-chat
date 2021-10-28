@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   Alert,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Dimensions
 } from 'react-native';
 
 import {
@@ -26,6 +26,9 @@ import {
 } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
+const height = Dimensions.get('window').height;
+
+const titleMarginTop = height > 750? 40 : 0;
 
 class MyProductsScreen extends React.Component {
   static contextType = NavigationContext;
@@ -214,7 +217,8 @@ class MyProductsScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     return (
-      <SafeAreaView style={GStyles.container}>
+      <View style={{  flex: 1,
+        alignItems: 'center', backgroundColor: '#2A2B2F'}}>
         <GHeaderBar
           headerTitle="My Products"
           leftType="back"
@@ -225,7 +229,7 @@ class MyProductsScreen extends React.Component {
                 style={[
                   GStyles.textSmall,
                   GStyles.boldText,
-                  { color: 'black' },
+                  { color: '#D2D2D2', marginTop: titleMarginTop },
                 ]}
               >
                 Add New
@@ -257,7 +261,7 @@ class MyProductsScreen extends React.Component {
             {this._renderBottomMenu()}
           </View>
         </RBSheet>
-      </SafeAreaView>
+      </View>
     );
   }
 }

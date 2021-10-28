@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Alert,
   Linking,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -226,12 +225,12 @@ class SignupScreen extends React.Component {
   };
 
   onTerm = () => {
-    const url = 'http://www.stars.limited/terms-and-conditions';
+    const url = 'https://sites.google.com/view/starsindustries-terms/home';
     Linking.openURL(url);
   };
 
   onPrivacy = () => {
-    const url = 'http://www.stars.limited/privacy-policy';
+    const url = 'https://sites.google.com/view/starsindustries-privacy/home';
     Linking.openURL(url);
   };
 
@@ -267,8 +266,7 @@ class SignupScreen extends React.Component {
     return (
       <>
         {this.PromptModal()}
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={GStyles.container}>
+        <View style={GStyles.container}>
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
@@ -279,7 +277,7 @@ class SignupScreen extends React.Component {
             {this._renderButton()}
             {this._renderBottom()}
           </KeyboardAwareScrollView>
-        </SafeAreaView>
+        </View>
       </>
     );
   }

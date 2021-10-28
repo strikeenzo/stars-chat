@@ -5,7 +5,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -145,7 +144,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
       : Math.max(0, keyboardHeight - 0.25 * VIDEO_HEIGHT + 24);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <KeyboardAvoidingView enabled={false} style={{ flex: 1 }}>
         <View>
           <Text
@@ -194,7 +193,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
           <WriteComment post={post} onPressComment={onPressComment} />
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 };
 

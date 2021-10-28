@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { Constants, Helper, RestAPI } from '../../utils/Global';
 import { GStyles } from '../../utils/Global/Styles';
 import TopUserItem from '../../components/elements/TopUserItem';
+import GStyle from '../../utils/Global/Styles';
 
-const HomeVideoScreen = ({ team }) => {
+const HomeVideoScreen = ({ team, index }) => {
   const navigation = useNavigation();
   const flatListRef = useRef(null);
   const [isFetching, setIsFetching] = useState(false);
@@ -17,6 +18,12 @@ const HomeVideoScreen = ({ team }) => {
     true,
   );
 
+  let elixirFlames;
+  if (Number(team.totalElixirFlame) >= 10000) {
+    elixirFlames = `${Math.trunc(team.totalElixirFlame / 1000)}K`
+  } else {
+    elixirFlames = team.totalElixirFlame;
+  }
   useEffect(() => {
     onRefresh('init');
   }, []);
@@ -122,7 +129,11 @@ const HomeVideoScreen = ({ team }) => {
       </>
     );
   };
-
+  const numberMark = (index) => {
+ 
+    return <Text style={{ ...GStyles.arizoniaText }}>{index + 1}</Text>;
+  
+};
   const _renderFooter = () => {
     if (!isFetching) {
       return null;
@@ -150,13 +161,62 @@ const HomeVideoScreen = ({ team }) => {
   };
 
   return (
-    <>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        {team?.description ? _renderDescription() : null}
-        {_renderUserList()}
+  
+      <View style={[GStyles.rowCenterContainer, styles.container]}>
+        <View style={{ width: 36,height: 36, ...GStyles.newCenterAlign }}>
+          {numberMark(index)}
+        </View>
+
+{/* <View style={{height: 30, width: '20%', backgroundColor: 'black', borderRadius: 5, opacity: .3}}></View> */}
+     {/*    <Avatar
+          image={{ uri: item.photo || randomImageUrl }}
+          containerStyle={{ marginLeft: 16 }}
+        /> */}
+        <View style={styles.detailWrapper}>
+          <Text
+            style={[
+              GStyles.newTextSmall,
+              GStyles.boldText,
+              GStyles.upperCaseText,
+              {alignSelf: 'center'}
+            ]}
+          >
+            {team.name}
+          </Text>
+          <View style={[ { marginTop: 2 }]}>
+            {/* <CachedImage
+              source={icon}
+              style={{ width: 16, height: 16, marginRight: 4 }}
+              resizeMode="contain"
+            /> */}
+            <Text style={[GStyles.regularText, { color: '#D2D2D2', backgroundColor: 'black', padding: 10, borderRadius: 5 }]}>
+              {elixirFlames}
+            </Text>
+          </View>
+        </View>
       </View>
-    </>
+
   );
 };
+
+const styles = StyleSheet.create({
+  detailWrapper: {
+    flex: 1,
+    marginLeft: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  container : {
+    marginVertical: 5,
+    marginHorizontal: 5,
+    borderRadius: 5,
+    borderBottomWidth: 0.5,
+    backgroundColor: '#151515',
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    height: 80,
+    
+  }
+});
 
 export default HomeVideoScreen;

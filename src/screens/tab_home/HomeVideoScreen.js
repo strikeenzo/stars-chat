@@ -5,6 +5,7 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { Constants, Helper, RestAPI } from '../../utils/Global';
 import GStyle, { GStyles } from '../../utils/Global/Styles';
 import ProductsList from '../../components/elements/ProductsList';
+import Avatar from '../../components/elements/Avatar';
 
 const HomeVideoScreen = (props) => {
   const { category } = props;
@@ -15,14 +16,34 @@ const HomeVideoScreen = (props) => {
   const [totalCount, setTotalCount] = useState(0);
   const [curPage, setCurPage] = useState(1);
   const [products, setProducts] = useState([]);
+  const [topUsers, setTopUsers] = useState([]);
   const [onEndReachedDuringMomentum, setOnEndReachedDuringMomentum] = useState(
     true,
   );
 
+  const getSelectedTopUsers = () => {
+    RestAPI.get_all_users({}, (json, err) => {
+      if (err !== null) {
+        Helper.alertNetworkError();
+      } else {
+        if (json.status === 200) {
+          const profiles = json.data.userList.filter((user) => user?.isTopUser);
+          const shuffled = profiles.sort(() => 0.5 - Math.random());
+          const filteredItems = shuffled.slice(0, 5);
+
+          setTopUsers(filteredItems);
+        } else {
+          Helper.alertServerDataError();
+        }
+      }
+    });
+  };
   useEffect(() => {
     onRefresh('init');
   }, [currentSubCategory]);
-
+useEffect(()=> {
+getSelectedTopUsers()
+}, [])
   const onRefresh = (type) => {
     if (isFetching) {
       return;
@@ -86,9 +107,20 @@ const HomeVideoScreen = (props) => {
     navigation.dispatch(pushAction);
   };
 
+  
   const _renderVideo = () => {
     return (
       <View style={{ flex: 1 }}>
+        <View style={styles.avatars}>
+          {topUsers.map((item) => (
+            <Avatar
+            size={60}
+              key={item.id}
+              image={{ uri: item?.photo }}
+              onPress={() => onPressUser(item)}
+            />
+          ))}
+        </View>
         {products?.length ? (
           <ProductsList
             products={products}
@@ -109,6 +141,19 @@ const HomeVideoScreen = (props) => {
       </View>
     );
   };
+  const onPressUser = (item) => {
+    if (global.me) {
+      if (item.id === global.me?.id) {
+        navigation.jumpTo('profile');
+      } else {
+        global._opponentUser = item;
+        global._prevScreen = 'top_users';
+        navigation.navigate('profile_other');
+      }
+    } else {
+      navigation.navigate('signin');
+    }
+  };
 
   const onPressSubCategory = (subCategory) => {
     setCurrentSubCategory(subCategory);
@@ -116,6 +161,7 @@ const HomeVideoScreen = (props) => {
 
   const _renderSubCategories = () => {
     const subCategories = category?.subCategories || [];
+
     return (
       <View style={styles.subCategoriesContainer}>
         {subCategories.map((subCategory, index) => {
@@ -153,7 +199,7 @@ const HomeVideoScreen = (props) => {
 
 const styles = StyleSheet.create({
   subCategoriesContainer: {
-    padding: 16,
+    padding: 10,
     ...GStyles.rowContainer,
     flexWrap: 'wrap',
   },
@@ -170,6 +216,14 @@ const styles = StyleSheet.create({
     ...GStyles.textSmall,
     color: GStyle.grayColor,
     ...GStyles.boldText,
+  },
+  avatars: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '90%',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+     marginBottom: 10
   },
 });
 

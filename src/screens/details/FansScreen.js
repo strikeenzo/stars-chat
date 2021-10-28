@@ -2,7 +2,6 @@ import React, { forwardRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -109,14 +108,14 @@ class FansScreen extends React.Component {
     const { navigation } = this.props;
 
     return (
-      <SafeAreaView style={GStyles.container}>
+      <View style={GStyles.container}>
         <GHeaderBar
           headerTitle="Fans"
           leftType="back"
           navigation={navigation}
         />
         {this._renderUserList()}
-      </SafeAreaView>
+      </View>
     );
   }
 

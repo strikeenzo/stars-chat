@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Alert,
   BackHandler,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -198,8 +197,7 @@ class SigninScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={GStyles.container}>
+        <View style={GStyles.container}>
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
@@ -211,7 +209,7 @@ class SigninScreen extends React.Component {
             {this.___renderBottom()}
           </KeyboardAwareScrollView>
           {/* {this._renderBottom()} */}
-        </SafeAreaView>
+        </View>
       </>
     );
   }

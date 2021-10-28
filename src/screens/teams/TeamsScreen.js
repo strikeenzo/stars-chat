@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import {  StyleSheet, Text, View, TextInput, StatusBar } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScrollableTabView, {
@@ -13,6 +13,8 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { color } from 'react-native-reanimated';
 import CachedImage from '../../components/CachedImage';
 import formatNumber from '../../utils/Global/formatNumber';
+import Icon from 'react-native-vector-icons/AntDesign'
+
 const ic_flame = require('../../assets/images/Icons/ic_flame.png');
 
 class TeamsScreen extends React.Component {
@@ -22,20 +24,21 @@ class TeamsScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+   /*  this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.setLightStatusBar();
-    });
+    }); */
     this.refreshTeams();
   }
 
-  componentWillUnmount() {
+/*   componentWillUnmount() {
     this.unsubscribe();
-  }
+  } */
 
   init = () => {
     this.state = {
       isFetching: false,
       teams: [],
+      term: ''
     };
   };
 
@@ -80,39 +83,60 @@ class TeamsScreen extends React.Component {
       />
     );
   };
+ 
+  _search = () => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          borderRadius: 50,
+          width: "90%",
+          alignItems: "center",
+          marginTop: 50,
+          alignSelf: "center",
+          marginBottom: 10,
+          backgroundColor: '#35393F',
+          marginBottom: 40
+        }}
+      >
+        <Icon
+          name="search1"
+          size={25}
+          color="white"
+          style={{ marginLeft: 10 }}
+        />
+        <TextInput
+        onChangeText={(newTerm)=> this.setState({term: newTerm})}
+          placeholderTextColor="white"
+          style={styles.textInput}
+          placeholder="Search"
+          autoCapitalize="none"
+          autoCorrect={false}
+          numberOfLines={1}
+        />
+      </View>
+    )
+  }
 
   render() {
     const { teams } = this.state;
+    let newTeams = [];
+    if (this.state.term) {
+      newTeams = teams.filter(r => r.name.toLowerCase().includes(this.state.term))
+    } else {
+      newTeams = [...teams]
+    }
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#2A2B2F'}}>
+        <StatusBar hidden />
         {this._renderHeader()}
-
-        <ScrollableTabView
-          initialPage={0}
-          tabBarBackgroundColor="white"
-          tabBarTextStyle={styles.tabBarTextStyle}
-          tabBarInactiveTextColor={'black'}
-          tabBarActiveTextColor={GStyle.activeColor}
-          tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
-          renderTabBar={(header) => (
-            <View style={[GStyles.rowBetweenContainer, { paddingRight: 16 }]}>
-              <ScrollableTabBar
-                {...header}
-                tabs={header.tabs.map(
-                  (t, i) =>
-                    `${t}\n\n${formatNumber(teams[i].totalElixirFlame)}`,
-                )}
-                style={styles.scrollBar}
-              />
-            </View>
-          )}
-        >
-          {teams.map((team, index) => (
-            <TeamTab tabLabel={team.name} team={team} key={index.toString()} />
-          ))}
-        </ScrollableTabView>
-      </SafeAreaView>
+        {this._search()}
+        {newTeams?.length > 0 ? (newTeams.map((team, index) => (
+            <TeamTab index={index} team={team} key={index.toString()} />
+          ))) : this.state.term && newTeams?.length == 0 ? <Text style={[GStyles.newRegularText,{textAlign: 'center'}]}>No Teams Match Your Search</Text> : null}
+          
+      </ScrollView>
     );
   }
 }
@@ -135,6 +159,18 @@ const styles = StyleSheet.create({
     backgroundColor: GStyle.snowColor,
     borderRadius: 5,
     marginLeft: 15,
+  },
+  textInput: {
+    flex: 1,
+    fontSize: 18,
+    height: 50,
+    paddingHorizontal: 10,
+    color: "white",
+  },
+  iconStyle: {
+    fontSize: 35,
+    alignSelf: "center",
+    marginHorizontal: 15,
   },
 });
 

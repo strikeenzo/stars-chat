@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Dimensions,
   FlatList,
-  Platform,
+  Platform, SafeAreaView,
   StatusBar,
   TouchableOpacity,
   View,
@@ -43,6 +43,7 @@ class ProfileVideoScreen extends Component {
       itemDatas: global._productsList || [],
       curIndex: -1,
       item: {},
+      layout: { width: 0, height: 0 },
     };
   };
 
@@ -147,16 +148,68 @@ class ProfileVideoScreen extends Component {
     }
   };
 
+  setLayout = (event) => {
+    this.setState({
+      layout: {
+        width: event.nativeEvent.layout?.width,
+        height: event.nativeEvent.layout?.height,
+      },
+    });
+  };
+
   render() {
     return (
-      <View style={[GStyles.container, { backgroundColor: 'black' }]}>
+      <SafeAreaView style={[GStyles.container, { backgroundColor: 'black' }]}>
         {this.___renderStatusBar()}
         {this._renderVideo()}
         {this._renderProgress()}
         {this._renderBack()}
-      </View>
+      </SafeAreaView>
     );
   }
+
+  _renderVideo = () => {
+    const { isFetching, itemDatas } = this.state;
+
+    return (
+      <View
+        style={{ flex: 1, width: '100%', height: '100%' }}
+        onLayout={this.setLayout}
+      >
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          initialScrollIndex={
+            itemDatas.length > global._selIndex ? global._selIndex : 0
+          }
+          getItemLayout={(data, index) => ({
+            length: VIDEO_HEIGHT,
+            offset: VIDEO_HEIGHT * index,
+            index,
+          })}
+          pagingEnabled
+          initialNumToRender={3}
+          maxToRenderPerBatch={3}
+          windowSize={7}
+          removeClippedSubviews={false}
+          refreshing={isFetching}
+          onEndReachedThreshold={0.4}
+          data={itemDatas}
+          renderItem={this._renderItem}
+          onViewableItemsChanged={this.onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 10,
+          }}
+          keyExtractor={(item, index) => index.toString()}
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'black',
+            zIndex: 1,
+          }}
+        />
+      </View>
+    );
+  };
 
   _renderBack = () => {
     return (
@@ -173,44 +226,6 @@ class ProfileVideoScreen extends Component {
       </TouchableOpacity>
     );
   };
-
-  _renderVideo = () => {
-    const { isFetching, itemDatas } = this.state;
-
-    return (
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        initialScrollIndex={
-          itemDatas.length > global._selIndex ? global._selIndex : 0
-        }
-        getItemLayout={(data, index) => ({
-          length: VIDEO_HEIGHT,
-          offset: VIDEO_HEIGHT * index,
-          index,
-        })}
-        pagingEnabled
-        initialNumToRender={6}
-        maxToRenderPerBatch={6}
-        windowSize={6}
-        removeClippedSubviews={false}
-        refreshing={isFetching}
-        onEndReachedThreshold={0.4}
-        data={itemDatas}
-        renderItem={this._renderItem}
-        onViewableItemsChanged={this.onViewableItemsChanged}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 60,
-        }}
-        keyExtractor={(item, index) => index.toString()}
-        style={{
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'black',
-          zIndex: 1,
-        }}
-      />
-    );
-  };
   actions = {
     onPressLike: this.onPressLike,
     onPressMessage: this.onPressMessage,
@@ -225,6 +240,7 @@ class ProfileVideoScreen extends Component {
       index={index}
       actions={this.actions}
       detailStyle={{ bottom: 36 + Helper.getBottomBarHeight() }}
+      layout={this.state.layout}
     />
   );
 
