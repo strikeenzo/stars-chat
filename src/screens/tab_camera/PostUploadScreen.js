@@ -198,10 +198,10 @@ class PostUploadScreen extends React.Component {
       global.warning('Warning', 'Invalid video.');
       return;
     }
-    if (duration > 20 && global._prevScreen === 'my_posts') {
+    if (duration > 31 && global._prevScreen === 'my_posts') {
       global.warning(
         'Warning',
-        'Sorry the video is too long, max duration is 20 secs.',
+        'Sorry the video is too long, max duration is 30 secs.',
       );
       return;
     }
@@ -271,23 +271,21 @@ class PostUploadScreen extends React.Component {
 
   render() {
     return (
-      <>
-        <SafeAreaView style={styles.container}>
-          {this._renderHeader()}
-          <KeyboardAwareScrollView
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="always"
-          >
-            {this._renderVideo()}
-            <View style={{ paddingHorizontal: 16 }}>
-              {this._renderMainInputs()}
-              {this._renderButtons()}
-            </View>
-          </KeyboardAwareScrollView>
-          {this._renderProgress()}
-          {this._renderDialog()}
-        </SafeAreaView>
-      </>
+      <SafeAreaView style={styles.container}>
+        {this._renderHeader()}
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="always"
+        >
+          {this._renderVideo()}
+          <View style={{ paddingHorizontal: 16 }}>
+            {this._renderMainInputs()}
+            {this._renderButtons()}
+          </View>
+        </KeyboardAwareScrollView>
+        {this._renderProgress()}
+        {this._renderDialog()}
+      </SafeAreaView>
     );
   }
 

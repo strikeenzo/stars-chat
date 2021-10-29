@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -115,8 +114,7 @@ class FCForgetPasswordScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={GStyles.container}>
+        <View style={GStyles.container}>
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
@@ -126,7 +124,7 @@ class FCForgetPasswordScreen extends React.Component {
             {this._renderEmail()}
             {this._renderButton()}
           </KeyboardAwareScrollView>
-        </SafeAreaView>
+        </View>
       </>
     );
   }

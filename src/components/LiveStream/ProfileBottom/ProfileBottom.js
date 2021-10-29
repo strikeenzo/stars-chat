@@ -30,7 +30,7 @@ const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 10) / 3.0;
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
+const randomImageUrl = 'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
 class ProfileBottom extends React.Component {
   constructor(props) {

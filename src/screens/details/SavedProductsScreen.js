@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import {
   StackActions,
@@ -126,14 +126,14 @@ class SavedProductsScreen extends React.Component {
     const { navigation } = this.props;
 
     return (
-      <SafeAreaView style={GStyles.container}>
+      <View style={GStyles.container}>
         <GHeaderBar
           headerTitle="Saved Products"
           leftType="back"
           navigation={navigation}
         />
         {this._renderVideo()}
-      </SafeAreaView>
+      </View>
     );
   }
 }

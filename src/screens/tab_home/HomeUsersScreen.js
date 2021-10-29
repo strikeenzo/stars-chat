@@ -117,7 +117,7 @@ class HomeUsersScreen extends React.Component {
   render() {
     return (
       <>
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1, backgroundColor: '#2A2B2F' }}>
           {this._renderUserList()}
         </View>
       </>

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Alert,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -148,8 +147,7 @@ class FCRecoverPasswordScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={GStyles.container}>
+        <View style={GStyles.container}>
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
@@ -159,7 +157,7 @@ class FCRecoverPasswordScreen extends React.Component {
             {this._renderInput()}
             {this._renderButton()}
           </KeyboardAwareScrollView>
-        </SafeAreaView>
+        </View>
       </>
     );
   }

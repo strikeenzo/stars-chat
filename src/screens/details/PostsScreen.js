@@ -3,6 +3,7 @@ import {
   Dimensions,
   FlatList,
   Platform,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
@@ -24,7 +25,6 @@ import {
 import CommentsScreen from './CommentsScreen';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import CachedImage from '../../components/CachedImage';
-import RenderProducts from '../../components/products/RenderProduct';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -53,6 +53,7 @@ class PostsScreen extends Component {
       posts: global._postsList || [],
       curIndex: 0,
       item: {},
+      layout: { width: 0, height: 0 },
     };
   };
 
@@ -174,9 +175,18 @@ class PostsScreen extends Component {
     this.setState({ posts: newPosts });
   };
 
+  setLayout = (event) => {
+    this.setState({
+      layout: {
+        width: event.nativeEvent.layout?.width,
+        height: event.nativeEvent.layout?.height,
+      },
+    });
+  };
+
   render() {
     return (
-      <View style={[GStyles.container, styles.container]}>
+      <SafeAreaView style={[GStyles.container, styles.container]}>
         {this.___renderStatusBar()}
         {this._renderVideo()}
         {this._renderProgress()}
@@ -203,7 +213,7 @@ class PostsScreen extends Component {
             onAddComment={this.onAddComment}
           />
         </RBSheet>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -229,32 +239,34 @@ class PostsScreen extends Component {
     const { isFetching, posts } = this.state;
 
     return (
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        initialScrollIndex={
-          posts.length > global._selIndex ? global._selIndex : 0
-        }
-        getItemLayout={(data, index) => ({
-          length: VIDEO_HEIGHT,
-          offset: VIDEO_HEIGHT * index,
-          index,
-        })}
-        pagingEnabled
-        initialNumToRender={6}
-        maxToRenderPerBatch={6}
-        windowSize={6}
-        removeClippedSubviews={false}
-        refreshing={isFetching}
-        onEndReachedThreshold={0.4}
-        data={posts}
-        renderItem={this._renderItem}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 60,
-        }}
-        onViewableItemsChanged={this.onViewableItemsChanged}
-        keyExtractor={this.keyExtractor}
-        style={{ height: '100%', width: '100%' }}
-      />
+      <View style={styles.flatList} onLayout={this.setLayout}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          initialScrollIndex={
+            posts.length > global._selIndex ? global._selIndex : 0
+          }
+          getItemLayout={(data, index) => ({
+            length: this.state.layout.height,
+            offset: this.state.layout.height * index,
+            index,
+          })}
+          pagingEnabled
+          initialNumToRender={3}
+          maxToRenderPerBatch={3}
+          windowSize={7}
+          removeClippedSubviews={false}
+          refreshing={isFetching}
+          onEndReachedThreshold={0.4}
+          data={posts}
+          renderItem={this._renderItem}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 10,
+          }}
+          onViewableItemsChanged={this.onViewableItemsChanged}
+          keyExtractor={this.keyExtractor}
+          style={{ height: '100%', width: '100%' }}
+        />
+      </View>
     );
   };
 
@@ -274,6 +286,7 @@ class PostsScreen extends Component {
       actions={this.actions}
       index={index}
       detailStyle={{ bottom: 36 + Helper.getBottomBarHeight() }}
+      layout={this.state.layout}
     />
   );
 
@@ -297,5 +310,10 @@ export default function (props) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
+  },
+  flatList: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });

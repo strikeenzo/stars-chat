@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   Alert,
-  SafeAreaView,
   StatusBar,
   TouchableOpacity,
   View,
@@ -374,7 +373,7 @@ class ViewLive extends Component {
     const mode = room?.mode || 0;
 
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar hidden />
         <TouchableOpacity
           style={{ flex: 1 }}
@@ -441,7 +440,7 @@ class ViewLive extends Component {
         </RBSheet>
         {/*<FloatingHearts count={countHeart} />*/}
         {showHeart && <StaticHeart />}
-      </SafeAreaView>
+      </View>
     );
   }
 }

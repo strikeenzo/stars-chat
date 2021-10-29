@@ -2,11 +2,11 @@ import React, { forwardRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  StatusBar
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -23,6 +23,7 @@ import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view';
 import Avatar from '../../components/elements/Avatar';
+import TextTicker from 'react-native-text-ticker'
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 32) / 3.0;
@@ -35,16 +36,16 @@ class TopUsersScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+  /*   this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.setLightStatusBar();
-    });
+    }); */
     this.onRefresh('init');
     this.getSelectedTopUsers();
   }
 
-  componentWillUnmount() {
+ /*  componentWillUnmount() {
     this.unsubscribe();
-  }
+  } */
 
   init = () => {
     this.state = {
@@ -169,14 +170,12 @@ class TopUsersScreen extends React.Component {
 
   render() {
     return (
-      <>
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={GStyles.container}>
+      <View style={GStyles.darkContainer}>
+        <StatusBar hidden />
           {this._renderHeader()}
           {this._renderTab()}
           {this._renderUserList()}
-        </SafeAreaView>
-      </>
+      </View>
     );
   }
 
@@ -192,15 +191,24 @@ class TopUsersScreen extends React.Component {
         />
         {topPageText ? (
           <View style={styles.banner}>
-            <Text style={styles.announcement}>{topPageText}</Text>
+             <TextTicker
+          style={{ fontSize: 20 , backgroundColor: 'black', color: '#D2D2D2', fontFamily: 'DMSans-medium'}}
+          duration={6000}
+          loop
+          bounce
+          repeatSpacer={0}
+          marqueeDelay={1000}
+        >
+         {topPageText}
+        </TextTicker>
           </View>
         ) : null}
         <View style={styles.avatars}>
           {topUsers.map((item) => (
             <Avatar
+            size={50}
               key={item.id}
               image={{ uri: item?.photo }}
-              containerStyle={{ marginLeft: 10 }}
               onPress={() => this.onPressUser(item)}
             />
           ))}
@@ -253,7 +261,7 @@ class TopUsersScreen extends React.Component {
   };
 
   renderTabItem = (name, page, isTabActive, onPressHandler) => {
-    const textColor = isTabActive ? 'black' : GStyle.grayColor;
+    const textColor = isTabActive ? '#D2D2D2' : GStyle.grayColor;
     const fontWeight = isTabActive ? '700' : '600';
     const onPress = () => {
       onPressHandler(page);
@@ -262,7 +270,7 @@ class TopUsersScreen extends React.Component {
 
     return (
       <TouchableOpacity
-        style={[styles.tabStyle, isTabActive && { backgroundColor: 'white' }]}
+        style={[styles.tabStyle, isTabActive && { backgroundColor: '#2A2B2F' }]}
         key={name}
         onPress={onPress}
       >
@@ -290,7 +298,7 @@ class TopUsersScreen extends React.Component {
           }}
         >
           <View tabLabel="Top" />
-          <View tabLabel="Gift Sent" />
+          <View tabLabel="Winners" />
         </ScrollableTabView>
       </View>
     );
@@ -325,12 +333,17 @@ const styles = StyleSheet.create({
   avatars: {
     display: 'flex',
     flexDirection: 'row',
+    width: '86%',
+    justifyContent: 'space-between',
+    alignSelf: 'center'
   },
   banner: {
     backgroundColor: GStyle.grayBackColor,
-    borderRadius: 8,
-    width: '96%',
-    marginVertical: 10,
+    width: '100%',
+    marginBottom: 10,
+    height: 40,
+    backgroundColor: 'black',
+    justifyContent: 'center'
   },
   statisticsWrapper: {
     ...GStyles.centerAlign,
@@ -348,14 +361,18 @@ const styles = StyleSheet.create({
   listWrapper: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#2A2B2F',
   },
   tabContainer: {
     width: '100%',
+    height: '12%',
     marginTop: 16,
+    backgroundColor: '#2A2B2F',
+    justifyContent: 'center'
+
   },
   tabView: {
-    backgroundColor: '#F8F6F7',
+    backgroundColor: '#35393F',
     flex: 0,
     padding: 8,
     borderRadius: 120,
@@ -381,11 +398,13 @@ export default forwardRef((props, ref) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
+    <View style={{flex: 1, backgroundColor: 'black'}}>
     <TopUsersScreen
       {...props}
       ref={ref}
       navigation={navigation}
       route={route}
     />
+    </View>
   );
 });

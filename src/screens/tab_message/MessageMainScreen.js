@@ -2,7 +2,7 @@ import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  SafeAreaView,
+  View,
   StyleSheet,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -123,11 +123,10 @@ class MessageMainScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           {this._renderHeader()}
           {this._renderRooms()}
-        </SafeAreaView>
+        </View>
       </>
     );
   }

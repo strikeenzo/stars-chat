@@ -46,7 +46,7 @@ const GStyle = {
   lightPurple: '#EFE7F1',
   yellowColor: '#FF9C1A',
   // yellowColor: '#F5B024',
-  whiteColor: 'white',
+  whiteColor: '#D2D2D2',
   purpleOpacityColor: '#C98FD488',
   placeholderColor: '#fff8',
   inputColor: '#333',
@@ -77,12 +77,17 @@ const GStyle = {
 const GStyles = StyleSheet.create({
   statusBar: {
     flex: 0,
-    backgroundColor: GStyle.snowColor,
+    backgroundColor: '#2A2B2F',
   },
   container: {
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  darkContainer: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#2A2B2F',
   },
 
   centerContainer: {
@@ -146,6 +151,10 @@ const GStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  newCenterAlign: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   borderBottom: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: GStyle.grayColor,
@@ -188,10 +197,25 @@ const GStyles = StyleSheet.create({
     color: GStyle.blackColor,
     fontSize: 18,
   },
+  newMediumText: {
+    fontFamily: 'GothamPro-Medium',
+    color: GStyle.whiteColor,
+    fontSize: 18,
+  },
   regularText: {
     fontFamily: 'GothamPro',
     color: GStyle.blackColor,
     fontSize: 16,
+  },
+  newRegularText: {
+    fontFamily: 'GothamPro',
+    color: GStyle.whiteColor,
+    fontSize: 16,
+  },
+  arizoniaText: {
+    fontFamily: 'Arizonia-Regular',
+    color: GStyle.whiteColor,
+    fontSize: 24,
   },
   titleText: {
     fontFamily: 'GothamPro-Medium',
@@ -267,6 +291,12 @@ const GStyles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 12,
     color: 'white',
+  },
+  newTextSmall: {
+    fontFamily: 'GothamPro',
+    fontWeight: '600',
+    fontSize: 14,
+    color: '#D2D2D2',
   },
   textExtraSmall: {
     fontFamily: 'GothamPro',

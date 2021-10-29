@@ -2,11 +2,11 @@ import React from 'react';
 import {
   Animated,
   Linking,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  StatusBar,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -24,18 +24,18 @@ import {
   Helper,
   RestAPI,
 } from '../../utils/Global';
-
-import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
+import LinearGradient from 'react-native-linear-gradient';
+import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream_bold.png';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
-import ic_menu_messages from '../../assets/images/Icons/ic_menu_messages.png';
-import ic_menu_fans from '../../assets/images/Icons/ic_menu_fans.png';
+import ic_menu_messages from '../../assets/images/Icons/ic_menu_messages_new.png';
+import ic_menu_fans from '../../assets/images/Icons/ic_menu_fans_new.png';
 import ic_menu_drafts from '../../assets/images/Icons/ic_menu_drafts.png';
-import ic_stars from '../../assets/images/Icons/ic_stars.png';
-import ic_menu_saved_products from '../../assets/images/Icons/ic_tab_home.png';
-import ic_my_products from '../../assets/images/Icons/ic_tab_home.png';
-import ic_my_videos from '../../assets/images/Icons/ic_tab_play.png';
+import ic_stars from '../../assets/images/Icons/ic_plus_1.png';
+import ic_menu_saved_products from '../../assets/images/Icons/ic_tab_home_bold.png';
+import ic_my_products from '../../assets/images/Icons/ic_tab_home_bold.png';
+import ic_my_videos from '../../assets/images/Icons/ic_tab_play_bold.png';
 import ic_support from '../../assets/images/Icons/ic_support.png';
-import ic_sign from '../../assets/images/Icons/ic_vip.png';
+import ic_sign from '../../assets/images/Icons/ic_vip_new.png';
 import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 import Achievements from '../../components/profile/Achievements';
 import CachedImage from '../../components/CachedImage';
@@ -94,17 +94,36 @@ const getMenuItems = (navigation, setMyUserAction) => {
     },
     {
       icon: ic_stars,
-      title: 'Stars I follow',
+      title: 'Following',
       onPress: () => {
         navigation.navigate('following_users');
       },
     },
     {
-      icon: ic_menu_drafts,
-      title: 'Drafts',
-      hideGuest: true,
+      icon: ic_stars,
+      title: 'User Guidelines',
       onPress: () => {
-        navigation.navigate('camera_draft');
+        Linking.openURL(
+          'https://sites.google.com/view/starsindustries-guidelines/home',
+        );
+      },
+    },
+    {
+      icon: ic_stars,
+      title: 'Terms of Services',
+      onPress: () => {
+        Linking.openURL(
+          'https://sites.google.com/view/starsindustries-terms/home',
+        );
+      },
+    },
+    {
+      icon: ic_stars,
+      title: 'Privacy Policy',
+      onPress: () => {
+        Linking.openURL(
+          'https://sites.google.com/view/starsindustries-privacy/home',
+        );
       },
     },
     {
@@ -115,12 +134,11 @@ const getMenuItems = (navigation, setMyUserAction) => {
       },
     },
   ];
-
   menu.push(
     global.me?.userType === 0
       ? {
           icon: ic_sign,
-          title: 'Sign In',
+          title: 'Artist Account',
           onPress: () => {
             global._prevScreen = 'profile_edit';
             navigation.navigate('signin');
@@ -128,7 +146,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
         }
       : {
           icon: ic_sign,
-          title: 'Sign Out',
+          title: 'Guest Account',
           onPress: async () => {
             ChatStreamSocketManager.instance.emitLeaveRoom({
               roomId: global.me?.id,
@@ -150,6 +168,15 @@ const getMenuItems = (navigation, setMyUserAction) => {
   return menu;
 };
 
+const menuIcon = (icon) => {
+  if (icon == ic_support) {
+    return '#D2D2D2';
+  } else if (icon == ic_stars) {
+    return 'white';
+  } else {
+    return 'none';
+  }
+};
 class ProfileMainScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -159,7 +186,7 @@ class ProfileMainScreen extends React.Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.setLightStatusBar();
+      // Helper.setLightStatusBar();
       this.onRefresh();
     });
   }
@@ -206,7 +233,8 @@ class ProfileMainScreen extends React.Component {
   render() {
     const { user, navigation, unreadCount } = this.props;
     const randomNumber = Math.floor(Math.random() * avatars.length);
-    const randomImageUrl = avatars[randomNumber];
+    const randomImageUrl =
+      'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
     const avatarImage = {
       uri: user?.photo ?? randomImageUrl,
     };
@@ -236,33 +264,85 @@ class ProfileMainScreen extends React.Component {
     ];
 
     return (
-      <SafeAreaView style={GStyles.container}>
+      <View style={GStyles.container}>
+        <StatusBar hidden />
         <View style={styles.container}>
           <Animated.View style={topAnimatedStyle}>
             <TouchableOpacity
               onPress={this.onPressProfile}
-              style={{ ...GStyles.centerAlign }}
+              style={{ ...GStyles.centerAlign, marginTop: 70 }}
             >
-              <Avatar image={avatarImage} size={106} />
+              <Avatar image={avatarImage} size={80} />
               <Text
                 style={[
-                  GStyles.mediumText,
+                  GStyles.newMediumText,
                   { marginTop: 16, textTransform: 'uppercase' },
                 ]}
               >
                 {displayName}
               </Text>
-              <View style={{ flexShrink: 1, marginTop: 8 }}>
+              <View style={{ flexShrink: 1, marginTop: 8, marginBottom: 30 }}>
                 <Text
-                  style={{ ...GStyles.regularText, color: GStyle.grayColor }}
+                  style={{ ...GStyles.newRegularText, color: GStyle.grayColor }}
                   ellipsizeMode="tail"
                   numberOfLines={1}
                 >
                   ID: {user?.uniqueId}
                 </Text>
               </View>
+              <View
+                style={{
+                  width: '80%',
+                  flexDirection: 'row',
+                  alignSelf: 'flex-start',
+                  marginTop: 10,
+                  marginBottom: 50,
+                  alignSelf:
+                    user?.isVerified && user?.isOfficial
+                      ? 'flex-start'
+                      : 'center',
+                }}
+              >
+                {user?.isVerified && (
+                  <View
+                    style={{
+                      height: 30,
+                      width: '25%',
+                      overflow: 'hidden',
+                      backgroundColor: '#3AFA95',
+                      borderRadius: 4,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight:
+                        user?.isVerified && user?.isOfficial ? 10 : 0,
+                    }}
+                  >
+                    <Text style={[GStyles.elementLabel, styles.verified]}>
+                      Verified
+                    </Text>
+                  </View>
+                )}
+                {user?.isOfficial && (
+                  <LinearGradient
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    colors={['#BB8323', '#F8F278', '#BB8323']}
+                    style={styles.officialContainer}
+                  >
+                    <Text style={[GStyles.elementLabel, styles.official]}>
+                      Official
+                    </Text>
+                  </LinearGradient>
+                )}
+              </View>
             </TouchableOpacity>
-            <Achievements opponentUser={user} showDiamond={true} />
+            <View style={{ marginTop: 20 }}>
+              <Achievements
+                opponentUser={user}
+                showDiamond={true}
+                check={true}
+              />
+            </View>
           </Animated.View>
           <Animated.ScrollView
             contentContainerStyle={[
@@ -288,6 +368,14 @@ class ProfileMainScreen extends React.Component {
               >
                 <Text style={styles.teamsItemText}>Teams</Text>
               </TouchableOpacity>
+              {user?.userType === 1 ? (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('profile_check')}
+                  style={styles.viewProfileContainer}
+                >
+                  <Text style={styles.teamsItemText}>View my profile</Text>
+                </TouchableOpacity>
+              ) : null}
               {getMenuItems(navigation, setMyUserAction).map((menu, index) => {
                 if (user?.userType === 0 && menu.hideGuest) {
                   return null;
@@ -298,9 +386,28 @@ class ProfileMainScreen extends React.Component {
                     onPress={menu.onPress}
                     key={index.toString()}
                   >
-                    <CachedImage source={menu.icon} style={styles.menuIcon} />
+                    {menu.icon == ic_sign ? (
+                      <CachedImage
+                        tintColor={menuIcon(menu.icon)}
+                        source={menu.icon}
+                        style={styles.menuIcon}
+                      />
+                    ) : null}
                     <View style={styles.menuRight}>
-                      <Text style={GStyles.regularText}>{menu.title}</Text>
+                      <Text
+                        style={{
+                          fontFamily: 'GothamPro',
+                          color: GStyle.whiteColor,
+                          fontSize: 16,
+                          marginLeft:
+                            menu.title == 'Artist Account' ||
+                            menu.title == 'Guest Account'
+                              ? 0
+                              : -18,
+                        }}
+                      >
+                        {menu.title}
+                      </Text>
                       {unreadCount > 0 && menu.key === 'messages' && (
                         <View style={styles.messageBadgeContainer}>
                           <View style={styles.messageBadgeWrapper}>
@@ -324,7 +431,7 @@ class ProfileMainScreen extends React.Component {
             </View>
           </Animated.ScrollView>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 }
@@ -333,6 +440,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
+    backgroundColor: '#2A2B2F',
   },
   buttonFill: {
     width: '70%',
@@ -348,7 +456,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     zIndex: 10,
-    borderBottomWidth: 0.2,
     borderBottomColor: 'rgba(0, 0, 0, 0.5)',
   },
   textFill: {
@@ -382,11 +489,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 24,
     marginLeft: 24,
-    borderBottomColor: '#C4C4C4',
-    borderBottomWidth: 0.4,
   },
   menuIcon: {
-    width: 28,
+    width: 32,
     height: 28,
     resizeMode: 'contain',
   },
@@ -407,15 +512,44 @@ const styles = StyleSheet.create({
     height: 20,
   },
   teamsContainer: {
-    backgroundColor: '#FFF1E8',
+    backgroundColor: '#36373B',
     borderRadius: 12,
-    paddingVertical: 24,
+    paddingVertical: 16,
     paddingHorizontal: 24,
+    marginVertical: 20,
   },
   teamsItemText: {
     ...GStyles.regularText,
     ...GStyles.boldText,
-    color: '#FFBA8E',
+    color: '#D2D2D2',
+  },
+  verified: {
+    borderColor: GStyle.greenColor,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  official: {
+    borderColor: GStyle.greenColor,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  officialContainer: {
+    height: 30,
+    width: '25%',
+    overflow: 'hidden',
+    backgroundColor: '#98FB98',
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  viewProfileContainer: {
+    backgroundColor: '#36373B',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    marginBottom: 20,
   },
 });
 

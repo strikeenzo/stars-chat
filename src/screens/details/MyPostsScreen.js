@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   Alert,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Dimensions
 } from 'react-native';
 
 import {
@@ -27,6 +27,9 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
 import PostItem from '../../components/elements/PostItem';
+const height = Dimensions.get('window').height;
+
+const titleMarginTop = height > 750? 40 : 0;
 
 class MyPostsScreen extends React.Component {
   constructor(props) {
@@ -217,7 +220,8 @@ class MyPostsScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     return (
-      <SafeAreaView style={GStyles.container}>
+      <View style={{  flex: 1,
+        alignItems: 'center', backgroundColor: '#2A2B2F'}}>
         <GHeaderBar
           headerTitle="My Videos"
           leftType="back"
@@ -228,7 +232,7 @@ class MyPostsScreen extends React.Component {
                 style={[
                   GStyles.textSmall,
                   GStyles.boldText,
-                  { color: 'black' },
+                  { color: '#D2D2D2', marginTop: titleMarginTop },
                 ]}
               >
                 Add Video
@@ -260,7 +264,7 @@ class MyPostsScreen extends React.Component {
             {this._renderBottomMenu()}
           </View>
         </RBSheet>
-      </SafeAreaView>
+      </View>
     );
   }
 }

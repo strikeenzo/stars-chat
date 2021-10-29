@@ -24,7 +24,7 @@ export default class SearchBarItem extends Component {
   };
 
   searchImage = () => {
-    return <CachedImage source={ic_search} style={{ width: 16, height: 16 }} />;
+    return <CachedImage tintColor='#D2D2D2' source={ic_search} style={{ width: 16, height: 16 }} />;
   };
 
   render() {
@@ -41,11 +41,11 @@ export default class SearchBarItem extends Component {
         returnKeyType={'search'}
         onSubmitEditing={this.onSearchSubmit}
         autoCapitalize="none"
-        inputStyle={GStyles.regularText}
+        inputStyle={GStyles.newRegularText}
         containerStyle={{
           ...GStyles.shadow,
           height: 48,
-          backgroundColor: 'white',
+          backgroundColor: '#505050',
           justifyContent: 'center',
           borderRadius: 32,
           borderTopWidth: 0,
@@ -54,9 +54,10 @@ export default class SearchBarItem extends Component {
         inputContainerStyle={{
           height: 44,
           borderRadius: 120,
-          backgroundColor: 'white',
+          backgroundColor: '#505050',
         }}
         rightIconContainerStyle={{ paddingLeft: 4 }}
+        placeholderTextColor='#D2D2D2'
       />
     );
   }

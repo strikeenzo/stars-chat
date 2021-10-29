@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScrollableTabView, {
   DefaultTabBar,
@@ -16,27 +16,27 @@ class BrowseRooms extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={[styles.container, {backgroundColor: '#2A2B2F'}]}>
         <ScrollableTabView
           initialPage={0}
           tabBarBackgroundColor="white"
           tabBarTextStyle={styles.tabBarTextStyle}
           tabBarInactiveTextColor={'black'}
-          tabBarActiveTextColor={GStyle.activeColor}
+          tabBarActiveTextColor='white'
           tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
           style={{ flex: 1 }}
           renderTabBar={() => (
             <DefaultTabBar
               style={{
                 borderWidth: 0,
-                backgroundColor: 'white',
+                backgroundColor: '#35393F',
               }}
             />
           )}
         >
-          <LiveStreamRooms tabLabel="Popular" keyword={'popular'} />
+          <LiveStreamRooms tabLabel="Broadcasts" keyword={'popular'} />
         </ScrollableTabView>
-      </SafeAreaView>
+      </View>
     );
   }
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Linking,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -251,19 +250,19 @@ class ProfileEditScreen extends React.Component {
   };
 
   onTerm = () => {
-    const url = 'http://www.stars.limited/terms-and-conditions';
+    const url = 'https://sites.google.com/view/starsindustries-terms/home';
     Linking.openURL(url);
   };
 
   onPrivacy = () => {
-    const url = 'http://www.stars.limited/privacy-policy';
+    const url = 'https://sites.google.com/view/starsindustries-privacy/home';
     Linking.openURL(url);
   };
 
   render() {
     return (
       <>
-        <SafeAreaView style={GStyles.container}>
+        <View style={GStyles.container}>
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
@@ -274,7 +273,7 @@ class ProfileEditScreen extends React.Component {
             {this._renderButton()}
             {this._renderBottom()}
           </KeyboardAwareScrollView>
-        </SafeAreaView>
+        </View>
       </>
     );
   }
@@ -294,7 +293,8 @@ class ProfileEditScreen extends React.Component {
     const { user } = this.props;
 
     const randomNumber = Math.floor(Math.random() * avatars.length);
-    const randomImageUrl = avatars[randomNumber];
+    const randomImageUrl =
+      'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
     const avatarImage = profilePhotoSelSource
       ? profilePhotoSelSource
       : {
