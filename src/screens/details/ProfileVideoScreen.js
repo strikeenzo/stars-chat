@@ -182,8 +182,8 @@ class ProfileVideoScreen extends Component {
             itemDatas.length > global._selIndex ? global._selIndex : 0
           }
           getItemLayout={(data, index) => ({
-            length: VIDEO_HEIGHT,
-            offset: VIDEO_HEIGHT * index,
+            length: this.state.layout.height,
+            offset: this.state.layout.height * index,
             index,
           })}
           pagingEnabled
