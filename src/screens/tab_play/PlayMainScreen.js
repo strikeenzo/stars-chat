@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -12,7 +12,6 @@ import {
   View,
 } from 'react-native';
 
-import SplashScreen from 'react-native-splash-screen';
 import { connect } from 'react-redux';
 import RBSheet from './../../components/react-native-raw-bottom-sheet';
 
@@ -33,7 +32,7 @@ import CommentsScreen from '../details/CommentsScreen';
 
 const SHEET_HEIGHT = Helper.getWindowHeight() * 0.75;
 
-class PlayMainScreen extends Component {
+class PlayMainScreen extends PureComponent {
   constructor(props) {
     super(props);
 

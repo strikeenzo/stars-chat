@@ -114,6 +114,10 @@ class RenderPosts extends PureComponent {
 
     const user = item.user || {};
     const isLike = !!item.isLiked;
+    const virtualTeam = user?.virtualTeam || {};
+    const viewCount = (item.viewCount || 0) + (virtualTeam?.addView || 0);
+    const likeCount = (typeof item.likeCount === 'number' ? item.likeCount : 0) + (virtualTeam?.addLike || 0);
+
     return (
       <TouchableOpacity
         style={[styles.container, layout]}
@@ -191,7 +195,7 @@ class RenderPosts extends PureComponent {
                 />
               </TouchableOpacity>
               <Text style={GStyles.textSmall}>
-                {typeof item.likeCount === 'number' ? item.likeCount : 0}
+                {likeCount}
               </Text>
               {this.checkIfBlockedMe(user) ||
               this.checkIfBlocked(user) ? null : (
@@ -244,7 +248,7 @@ class RenderPosts extends PureComponent {
                 style={styles.viewCountIcon}
                 tintColor="white"
               />
-              <Text style={GStyles.textSmall}>{item.viewCount || 0}</Text>
+              <Text style={GStyles.textSmall}>{viewCount}</Text>
             </View>
           </View>
         </>

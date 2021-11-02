@@ -24,7 +24,8 @@ const ic_support = require('../../assets/images/Icons/ic_support.png');
 const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = 'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
+const randomImageUrl =
+  'https://res.cloudinary.com/snaplist/image/upload/v1634327167/permanent/avatarFaces/1080xcorner_rsgs52.jpg';
 
 class RenderProducts extends PureComponent {
   constructor(props) {
@@ -102,10 +103,15 @@ class RenderProducts extends PureComponent {
     const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
     const categoryName = item?.category?.title || '';
     const subCategoryName = item?.subCategory?.title || '';
+    const virtualTeam = user?.virtualTeam || {};
+    const viewCount = (item.viewCount || 0) + (virtualTeam?.addView || 0);
+    const likeCount =
+      (typeof item.likeCount === 'number' ? item.likeCount : 0) +
+      (virtualTeam?.addLike || 0);
 
     return (
       <TouchableOpacity
-          style={[styles.container, layout]}
+        style={[styles.container, layout]}
         activeOpacity={1}
         onPress={this.onPress}
       >
@@ -163,9 +169,7 @@ class RenderProducts extends PureComponent {
                     tintColor={isLike ? GStyle.primaryColor : 'white'}
                   />
                 </TouchableOpacity>
-                <Text style={GStyles.textSmall}>
-                  {typeof item.likeCount === 'number' ? item.likeCount : 0}
-                </Text>
+                <Text style={GStyles.textSmall}>{likeCount}</Text>
 
                 {user.id !== global.me?.id && (
                   <TouchableOpacity
@@ -248,7 +252,7 @@ class RenderProducts extends PureComponent {
               style={styles.viewCountIcon}
               tintColor="white"
             />
-            <Text style={GStyles.textSmall}>{item.viewCount || 0}</Text>
+            <Text style={GStyles.textSmall}>{viewCount}</Text>
           </View>
         </>
       </TouchableOpacity>
