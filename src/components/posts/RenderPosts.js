@@ -115,8 +115,10 @@ class RenderPosts extends PureComponent {
     const user = item.user || {};
     const isLike = !!item.isLiked;
 
-    const viewCount = item.viewCount || 0;
-    const likeCount = typeof item.likeCount === 'number' ? item.likeCount : 0;
+    const viewCount = Math.floor(item.viewCount || 0);
+    const likeCount = Math.floor(
+      typeof item.likeCount === 'number' ? item.likeCount : 0,
+    );
 
     return (
       <TouchableOpacity

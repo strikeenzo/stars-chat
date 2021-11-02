@@ -104,8 +104,10 @@ class RenderProducts extends PureComponent {
     const categoryName = item?.category?.title || '';
     const subCategoryName = item?.subCategory?.title || '';
 
-    const viewCount = item.viewCount || 0;
-    const likeCount = typeof item.likeCount === 'number' ? item.likeCount : 0;
+    const viewCount = Math.floor(item.viewCount || 0);
+    const likeCount = Math.floor(
+      typeof item.likeCount === 'number' ? item.likeCount : 0,
+    );
 
     return (
       <TouchableOpacity
