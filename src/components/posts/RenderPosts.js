@@ -93,11 +93,11 @@ class RenderPosts extends PureComponent {
   };
 
   checkIfBlockedMe = (thisUser) => {
-    return thisUser?.blockList?.some((r) => r == global.me?.id);
+    return thisUser?.blockList?.some((r) => r === global.me?.id);
   };
 
   checkIfBlocked = (thisUser) => {
-    return global?.me?.blockList?.some((r) => r == thisUser?.id);
+    return global?.me?.blockList?.some((r) => r === thisUser?.id);
   };
 
   render() {
@@ -114,9 +114,9 @@ class RenderPosts extends PureComponent {
 
     const user = item.user || {};
     const isLike = !!item.isLiked;
-    const virtualTeam = user?.virtualTeam || {};
-    const viewCount = (item.viewCount || 0) + (virtualTeam?.addView || 0);
-    const likeCount = (typeof item.likeCount === 'number' ? item.likeCount : 0) + (virtualTeam?.addLike || 0);
+
+    const viewCount = item.viewCount || 0;
+    const likeCount = typeof item.likeCount === 'number' ? item.likeCount : 0;
 
     return (
       <TouchableOpacity
@@ -194,9 +194,7 @@ class RenderPosts extends PureComponent {
                   tintColor={isLike ? GStyle.primaryColor : 'white'}
                 />
               </TouchableOpacity>
-              <Text style={GStyles.textSmall}>
-                {likeCount}
-              </Text>
+              <Text style={GStyles.textSmall}>{likeCount}</Text>
               {this.checkIfBlockedMe(user) ||
               this.checkIfBlocked(user) ? null : (
                 <TouchableOpacity
