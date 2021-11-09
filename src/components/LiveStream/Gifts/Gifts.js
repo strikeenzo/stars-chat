@@ -95,6 +95,7 @@ class Gifts extends Component {
 export default connect(
   (state) => ({
     user: state.me?.user || {},
+    gifts: state.liveStream?.gifts || [],
   }),
   {},
 )(Gifts);

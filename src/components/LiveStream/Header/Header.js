@@ -44,7 +44,7 @@ class Component extends React.Component {
   onRandomProduct = () => {
     RestAPI.get_random_video({}, (json, err) => {
       if (err !== null) {
-        Helper.alertNetworkError();
+        //Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
           const randomProduct = json?.data || {};

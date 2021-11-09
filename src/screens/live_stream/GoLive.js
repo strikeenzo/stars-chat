@@ -12,12 +12,11 @@ import KeepAwake from 'react-native-keep-awake';
 
 import StartPanel from './StartPanel';
 import LiveStreamFooter from '../../components/LiveStream/LiveStreamFooter';
-import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Header from '../../components/LiveStream/Header';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
-import { Constants, Global, RestAPI } from '../../utils/Global';
+import { Constants, Global } from '../../utils/Global';
 import { setGifts } from '../../redux/liveStream/actions';
 import styles from './styles';
 import ic_audio from './../../assets/images/Icons/ic_audio_on.png';
@@ -183,11 +182,11 @@ class GoLive extends React.Component {
       streamerId,
       roomName,
     });
-    RestAPI.get_gifts({ userId: this.props.user?.id }, (json, error) => {
-      if (json?.status === 200 || json?.data) {
-        this.props.setGifts(json.data.gifts || []);
-      }
-    });
+    // RestAPI.get_gifts({ userId: this.props.user?.id }, (json, error) => {
+    //   if (json?.status === 200 || json?.data) {
+    //     this.props.setGifts(json.data.gifts || []);
+    //   }
+    // });
   };
 
   componentWillUnmount() {

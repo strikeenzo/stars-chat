@@ -20,6 +20,7 @@ import Heart from '../../assets/lottie/heart';
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
 const ic_comment = require('../../assets/images/Icons/ic_comment.png');
+import ic_gift from '../../assets/images/Icons/ic_gift.png';
 const ic_share = require('../../assets/images/Icons/ic_share.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
@@ -81,6 +82,8 @@ class RenderPosts extends PureComponent {
   onPressComments = () => {
     this.props.actions.onOpenProfileSheet();
   };
+
+
 
   onReadyForDisplay = () => {
     const { curIndex, index, isVideoPause } = this.props;
@@ -200,20 +203,20 @@ class RenderPosts extends PureComponent {
               {this.checkIfBlockedMe(user) ||
               this.checkIfBlocked(user) ? null : (
                 <TouchableOpacity
-                  onPress={this.onPressComments}
+                  onPress={actions.onPressGiftAction}
                   style={GStyles.videoActionButton}
                 >
                   <CachedImage
-                    source={ic_comment}
+                    source={ic_gift}
                     style={GStyles.actionIcons}
                     tintColor={'white'}
                   />
                 </TouchableOpacity>
               )}
-              {this.checkIfBlockedMe(user) ||
-              this.checkIfBlocked(user) ? null : (
-                <Text style={GStyles.textSmall}>{item.commentsCount || 0}</Text>
-              )}
+              {/*{this.checkIfBlockedMe(user) ||*/}
+              {/*this.checkIfBlocked(user) ? null : (*/}
+              {/*  <Text style={GStyles.textSmall}>{item.commentsCount || 0}</Text>*/}
+              {/*)}*/}
 
               <TouchableOpacity
                 onPress={actions.onPressShare}
