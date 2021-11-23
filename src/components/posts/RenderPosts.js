@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+/*
 import Video from 'react-native-video';
+*/
+import VideoPlayer from 'react-native-video-controls';
 
 import { GStyle, GStyles, Global } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
@@ -36,7 +39,6 @@ class RenderPosts extends PureComponent {
       showHeart: false,
       paused: false,
     };
-    this.player = React.createRef();
   }
 
   componentWillUpdate(
@@ -82,8 +84,6 @@ class RenderPosts extends PureComponent {
   onPressComments = () => {
     this.props.actions.onOpenProfileSheet();
   };
-
-
 
   onReadyForDisplay = () => {
     const { curIndex, index, isVideoPause } = this.props;
@@ -131,11 +131,17 @@ class RenderPosts extends PureComponent {
       >
         <>
           {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
-            <Video
-              ref={this.player}
+            <VideoPlayer
               source={{
                 uri: Global.convertToHLS(item.url || ''),
               }}
+              controls={false}
+              seekColor={'#ff0000'}
+              disableVolume={true}
+              disableBack={true}
+              disableFullscreen={true}
+              disableTimer={true}
+              disablePlayPause={true}
               repeat
               maxBitRate={9000000}
               paused={paused}
@@ -245,14 +251,14 @@ class RenderPosts extends PureComponent {
             >
               <Text style={GStyles.textSmall}>Report</Text>
             </TouchableOpacity>
-            <View style={styles.topBadge}>
+            {/*<View style={styles.topBadge}>
               <CachedImage
                 source={eye}
                 style={styles.viewCountIcon}
                 tintColor="white"
               />
               <Text style={GStyles.textSmall}>{viewCount}</Text>
-            </View>
+            </View>*/}
           </View>
         </>
       </TouchableOpacity>

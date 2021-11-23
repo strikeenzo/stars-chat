@@ -247,7 +247,7 @@ const Global = {
     return url
       ?.replace(
         'video/upload/',
-        'video/upload/q_auto:eco,vc_h264:baseline:3.1/',
+        'video/upload/q_auto,vc_h264:baseline:3.1/',
       )
       ?.replace(/\.[^/.]+$/, '.m3u8');
   },

@@ -162,8 +162,8 @@ class PostUploadScreen extends React.Component {
   deleteVideo = async () => {
     try {
       const { thumbUri, videoUri } = this.state;
-      RNFS.unlink(thumbUri);
-      RNFS.unlink(videoUri);
+      await RNFS.unlink(thumbUri);
+      await RNFS.unlink(videoUri);
     } catch (error) {}
     this.setState({ thumbUri: '', videoUri: '' });
   };
@@ -198,10 +198,10 @@ class PostUploadScreen extends React.Component {
       global.warning('Warning', 'Invalid video.');
       return;
     }
-    if (duration > 31 && global._prevScreen === 'my_posts') {
+    if (duration > 481 && global._prevScreen === 'my_posts') {
       global.warning(
         'Warning',
-        'Sorry the video is too long, max duration is 30 secs.',
+        'Sorry the video is too long, max duration is 8 minutes.',
       );
       return;
     }
