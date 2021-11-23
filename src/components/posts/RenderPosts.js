@@ -124,11 +124,7 @@ class RenderPosts extends PureComponent {
     );
 
     return (
-      <TouchableOpacity
-        style={[styles.container, layout]}
-        activeOpacity={1}
-        onPress={this.onPress}
-      >
+      <View style={[styles.container, layout]}>
         <>
           {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
             <VideoPlayer
@@ -143,7 +139,6 @@ class RenderPosts extends PureComponent {
               disableTimer={true}
               disablePlayPause={true}
               repeat
-              maxBitRate={9000000}
               paused={paused}
               muted={paused}
               poster={item.thumb}
@@ -167,8 +162,10 @@ class RenderPosts extends PureComponent {
               <LottieView source={Heart} autoPlay loop style={styles.lottie} />
             </View>
           )}
-          <View
+          <TouchableOpacity
             style={[GStyles.playInfoWrapper, detailStyle, styles.detailStyle]}
+            activeOpacity={1}
+            onPress={this.onPress}
           >
             <View style={styles.textsContainer}>
               {showTexts && (
@@ -243,7 +240,7 @@ class RenderPosts extends PureComponent {
                 containerStyle={{ marginVertical: 16 }}
               />
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.topPart}>
             <TouchableOpacity
               style={styles.topBadge}
@@ -261,7 +258,7 @@ class RenderPosts extends PureComponent {
             </View>*/}
           </View>
         </>
-      </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -281,6 +278,7 @@ const styles = StyleSheet.create({
   video: {
     width: '100%',
     height: '100%',
+    zIndex: 0,
   },
   detailStyle: {
     flexDirection: 'row',
