@@ -9,7 +9,7 @@ import {
 /*
 import Video from 'react-native-video';
 */
-import VideoPlayer from 'react-native-video-controls';
+import VideoPlayer from '../../components/react-native-video-controls/VideoPlayer';
 
 import { GStyle, GStyles, Global } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
@@ -124,7 +124,11 @@ class RenderPosts extends PureComponent {
     );
 
     return (
-      <View style={[styles.container, layout]}>
+      <TouchableOpacity
+        style={[styles.container, layout]}
+        activeOpacity={1}
+        onPress={this.onPress}
+      >
         <>
           {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
             <VideoPlayer
@@ -136,7 +140,7 @@ class RenderPosts extends PureComponent {
               disableVolume={true}
               disableBack={true}
               disableFullscreen={true}
-              disableTimer={true}
+              disableTimer={false}
               disablePlayPause={true}
               repeat
               paused={paused}
@@ -162,10 +166,8 @@ class RenderPosts extends PureComponent {
               <LottieView source={Heart} autoPlay loop style={styles.lottie} />
             </View>
           )}
-          <TouchableOpacity
+          <View
             style={[GStyles.playInfoWrapper, detailStyle, styles.detailStyle]}
-            activeOpacity={1}
-            onPress={this.onPress}
           >
             <View style={styles.textsContainer}>
               {showTexts && (
@@ -240,7 +242,7 @@ class RenderPosts extends PureComponent {
                 containerStyle={{ marginVertical: 16 }}
               />
             </View>
-          </TouchableOpacity>
+          </View>
           <View style={styles.topPart}>
             <TouchableOpacity
               style={styles.topBadge}
@@ -258,7 +260,7 @@ class RenderPosts extends PureComponent {
             </View>*/}
           </View>
         </>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -278,7 +280,6 @@ const styles = StyleSheet.create({
   video: {
     width: '100%',
     height: '100%',
-    zIndex: 0,
   },
   detailStyle: {
     flexDirection: 'row',

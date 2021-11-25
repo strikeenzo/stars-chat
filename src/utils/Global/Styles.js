@@ -334,7 +334,7 @@ const GStyles = StyleSheet.create({
   playInfoWrapper: {
     position: 'absolute',
     width: '100%',
-    bottom: 36,
+    bottom: 56,
     left: 0,
     paddingHorizontal: 16,
   },

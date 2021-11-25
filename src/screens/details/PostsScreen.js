@@ -343,7 +343,7 @@ class PostsScreen extends Component {
       isVideoPause={this.state.isVideoPause}
       actions={this.actions}
       index={index}
-      detailStyle={{ bottom: 36 + Helper.getBottomBarHeight() }}
+      detailStyle={{ bottom: 56 + Helper.getBottomBarHeight() }}
       layout={this.state.layout}
     />
   );
