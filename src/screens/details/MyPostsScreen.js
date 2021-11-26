@@ -207,7 +207,6 @@ class MyPostsScreen extends React.Component {
           products={posts}
           onRefresh={this.onRefresh}
           isFetching={isFetching}
-          onPressVideo={this.onPressVideo}
           renderItem={this.renderItem}
           onLongPressVideo={this.onLongPressVideo}
           onEndReachedDuringMomentum={onEndReachedDuringMomentum}

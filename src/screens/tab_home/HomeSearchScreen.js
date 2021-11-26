@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -21,22 +21,22 @@ import CachedImage from '../../components/CachedImage';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 const height = Dimensions.get('window').height;
-const searchBarHeight = height > 750? 110 : 80;
-const searchBarMargin = height > 750? 30 : 0;
+const searchBarHeight = height > 750 ? 110 : 80;
+const searchBarMargin = height > 750 ? 30 : 0;
 class HomeSearchScreen extends React.Component {
   constructor(props) {
     super(props);
-
     this.init();
   }
 
   init = () => {
+    const keyword = this.getKeyword(this.props.route?.params?.searchText || '');
     this.state = {
       isFetching: false,
       totalCount: 0,
 
-      searchText: '',
-      keyword: this.props.route.params.searchText,
+      searchText: this.props.route.params.searchText,
+      keyword,
       itemDatas: [],
     };
   };
@@ -71,18 +71,7 @@ class HomeSearchScreen extends React.Component {
     this.setState({ searchText: text });
   };
 
-  onSubmitSearchText = () => {
-    Keyboard.dismiss();
-
-    if (this.usersListRef) {
-      this.usersListRef.scrollToTop();
-    }
-    if (this.videosListRef) {
-      this.videosListRef.scrollToTop();
-    }
-
-    const { searchText } = this.state;
-
+  getKeyword = (searchText) => {
     const lastTyped = searchText.charAt(searchText.length - 1);
     const parseWhen = [',', ' ', ';', '\n'];
 
@@ -96,6 +85,20 @@ class HomeSearchScreen extends React.Component {
     } else {
       keyword = '';
     }
+    return keyword;
+  };
+  onSubmitSearchText = () => {
+    Keyboard.dismiss();
+
+    if (this.usersListRef) {
+      this.usersListRef.scrollToTop();
+    }
+    if (this.videosListRef) {
+      this.videosListRef.scrollToTop();
+    }
+
+    const { searchText } = this.state;
+    const keyword = this.getKeyword(searchText);
     this.setState({ keyword });
   };
 
@@ -114,16 +117,29 @@ class HomeSearchScreen extends React.Component {
     const { searchText } = this.state;
 
     return (
-      <View style={{ flexDirection: 'row', padding: 16,backgroundColor: '#35393F' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          padding: 16,
+          backgroundColor: '#35393F',
+        }}
+      >
         <TouchableOpacity onPress={this.onBack} style={GStyles.centerAlign}>
           <CachedImage
-          tintColor='#D2D2D2'
+            tintColor="#D2D2D2"
             source={ic_back}
             style={{ width: 18, height: 18, marginTop: searchBarMargin }}
             resizeMode={'contain'}
           />
         </TouchableOpacity>
-        <View style={{ flex: 1, marginVertical: 4, marginHorizontal: 8, marginTop: searchBarMargin }}>
+        <View
+          style={{
+            flex: 1,
+            marginVertical: 4,
+            marginHorizontal: 8,
+            marginTop: searchBarMargin,
+          }}
+        >
           <SearchBarItem
             searchText={searchText}
             onChangeText={this.onChangeSearchText}
@@ -135,7 +151,15 @@ class HomeSearchScreen extends React.Component {
             onPress={this.onSubmitSearchText}
             style={{ ...GStyles.centerAlign, height: 50 }}
           >
-            <Text style={{ ...GStyles.regularText, color: '#D2D2D2', marginTop: searchBarMargin }}>Search</Text>
+            <Text
+              style={{
+                ...GStyles.regularText,
+                color: '#D2D2D2',
+                marginTop: searchBarMargin,
+              }}
+            >
+              Search
+            </Text>
           </TouchableNativeFeedback>
         </View>
       </View>
@@ -151,25 +175,24 @@ class HomeSearchScreen extends React.Component {
           this.scrollTabView = ref;
         }}
         initialPage={0}
-        tabBarBackgroundColor='#202020'
-        tabBarActiveTextColor='white'
+        tabBarBackgroundColor="#202020"
+        tabBarActiveTextColor="white"
         tabBarUnderlineStyle={{ backgroundColor: 'white' }}
         renderTabBar={() => (
           <DefaultTabBar
-            inactiveTextColor='#D2D2D2'
+            inactiveTextColor="#D2D2D2"
             activeTextColor={GStyle.fontColor}
             backgroundColor={GStyle.grayBackColor}
-            style={{borderBottomWidth: 0}}
+            style={{ borderBottomWidth: 0 }}
           />
         )}
       >
         <HomeVideoSearch
-          tabLabel="Products"
+          tabLabel="Posts"
           ref={(ref) => {
             this.videosListRef = ref;
           }}
           keyword={keyword}
-          isQuickSearch={false}
         />
         <HomeUsersScreen
           tabLabel="Users"
