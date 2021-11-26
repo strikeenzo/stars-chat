@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -25,6 +26,9 @@ import {
 import CommentsScreen from './CommentsScreen';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import CachedImage from '../../components/CachedImage';
+import Gifts from '../../components/LiveStream/Gifts/Gifts';
+import { setMyUserAction } from '../../redux/me/actions';
+import { setGifts } from '../../redux/liveStream/actions';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -35,6 +39,8 @@ class PostsScreen extends Component {
     super(props);
 
     this.profileSheet = React.createRef();
+    this.giftBottomSheet = React.createRef();
+
     this.init();
   }
 
@@ -184,6 +190,46 @@ class PostsScreen extends Component {
     });
   };
 
+  onPressGiftAction = () => {
+    this.giftBottomSheet?.current?.open();
+  };
+
+  onPressSendGift = (gift) => {
+    const user = this.props.user || {};
+    if (user.diamond <= gift.diamond) {
+      return;
+    }
+    this.giftBottomSheet?.current?.close();
+    const item = this.state.item || {};
+
+    const params = {
+      giftId: gift?.id,
+      userId: user?.id,
+      posterId: item?.user?.id,
+    };
+    RestAPI.send_gift_post(params, (json, err) => {
+      if (err !== null) {
+        global.success(
+          Constants.ERROR_TITLE,
+          'Failed to sent a gift! Try again later.',
+        );
+      } else {
+        if (json.status === 200) {
+          global.success(Constants.SUCCESS_TITLE, 'Sent a gift!');
+          this.props.setMyUserAction({
+            ...user,
+            diamond: (user.diamond || 0) - (gift.diamond || 0),
+          });
+        } else {
+          global.success(
+            Constants.ERROR_TITLE,
+            'Failed to sent a gift! Try again later.',
+          );
+        }
+      }
+    });
+  };
+
   render() {
     return (
       <SafeAreaView style={[GStyles.container, styles.container]}>
@@ -212,6 +258,17 @@ class PostsScreen extends Component {
             onCloseComments={this.onCloseComments}
             onAddComment={this.onAddComment}
           />
+        </RBSheet>
+        <RBSheet
+          ref={this.giftBottomSheet}
+          openDuration={250}
+          customStyles={{
+            container: styles.sheetGiftContainer,
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
+          }}
+        >
+          <Gifts onPressSendGift={this.onPressSendGift} />
         </RBSheet>
       </SafeAreaView>
     );
@@ -276,6 +333,7 @@ class PostsScreen extends Component {
     onPressAvatar: this.onPressAvatar,
     onPressReport: this.onPressReport,
     onOpenProfileSheet: this.onOpenProfileSheet,
+    onPressGiftAction: this.onPressGiftAction,
   };
 
   _renderItem = ({ item, index }) => (
@@ -285,7 +343,7 @@ class PostsScreen extends Component {
       isVideoPause={this.state.isVideoPause}
       actions={this.actions}
       index={index}
-      detailStyle={{ bottom: 36 + Helper.getBottomBarHeight() }}
+      detailStyle={{ bottom: 56 + Helper.getBottomBarHeight() }}
       layout={this.state.layout}
     />
   );
@@ -301,11 +359,19 @@ class PostsScreen extends Component {
   };
 }
 
-export default function (props) {
+const PostsScreenWrapper = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return <PostsScreen {...props} navigation={navigation} route={route} />;
-}
+};
+
+export default connect(
+  (state) => ({
+    user: state.me?.user || {},
+    gifts: state.liveStream?.gifts || [],
+  }),
+  { setMyUserAction, setGifts },
+)(PostsScreenWrapper);
 
 const styles = StyleSheet.create({
   container: {

@@ -19,6 +19,7 @@ import RenderPosts from '../../components/posts/RenderPosts';
 import ProgressModal from '../../components/ProgressModal';
 
 import { setMyUserAction } from '../../redux/me/actions';
+import { setGifts } from '../../redux/liveStream/actions';
 
 import {
   Constants,
@@ -29,6 +30,8 @@ import {
   Miscs,
 } from '../../utils/Global';
 import CommentsScreen from '../details/CommentsScreen';
+import Gifts from '../../components/LiveStream/Gifts';
+import SocketManager from '../../utils/LiveStream/SocketManager';
 
 const SHEET_HEIGHT = Helper.getWindowHeight() * 0.75;
 
@@ -37,6 +40,7 @@ class PlayMainScreen extends PureComponent {
     super(props);
 
     this.profileSheet = React.createRef();
+    this.giftBottomSheet = React.createRef();
     this.init();
     //SplashScreen.hide();
   }
@@ -128,6 +132,11 @@ class PlayMainScreen extends PureComponent {
         if (user) {
           Miscs.initUser(user, username, password);
           this.props.setMyUserAction(user);
+          RestAPI.get_gifts({ userId: user?.id }, (res, error) => {
+            if (res?.status === 200 || res?.data) {
+              this.props.setGifts(res.data.gifts || []);
+            }
+          });
         }
 
         if (type === 'more') {
@@ -280,6 +289,47 @@ class PlayMainScreen extends PureComponent {
     }
   };
 
+  onPressGiftAction = () => {
+    this.giftBottomSheet?.current?.open();
+  };
+
+  onPressSendGift = (gift) => {
+    const user = this.props.user || {};
+    if (user.diamond <= gift.diamond) {
+      return;
+    }
+    this.giftBottomSheet?.current?.close();
+    const item = this.state.item || {};
+
+    const params = {
+      giftId: gift?.id,
+      userId: user?.id,
+      posterId: item?.user?.id,
+    };
+    console.log(params);
+    RestAPI.send_gift_post(params, (json, err) => {
+      if (err !== null) {
+        global.success(
+          Constants.ERROR_TITLE,
+          'Failed to sent a gift! Try again later.',
+        );
+      } else {
+        if (json.status === 200) {
+          global.success(Constants.SUCCESS_TITLE, 'Sent a gift!');
+          this.props.setMyUserAction({
+            ...user,
+            diamond: (user.diamond || 0) - (gift.diamond || 0),
+          });
+        } else {
+          global.success(
+            Constants.ERROR_TITLE,
+            'Failed to sent a gift! Try again later.',
+          );
+        }
+      }
+    });
+  };
+
   onOpenProfileSheet = () => {
     this.profileSheet?.current?.open();
   };
@@ -322,6 +372,17 @@ class PlayMainScreen extends PureComponent {
             onCloseComments={this.onCloseComments}
             onAddComment={this.onAddComment}
           />
+        </RBSheet>
+        <RBSheet
+          ref={this.giftBottomSheet}
+          openDuration={250}
+          customStyles={{
+            container: styles.sheetGiftContainer,
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
+          }}
+        >
+          <Gifts onPressSendGift={this.onPressSendGift} />
         </RBSheet>
       </SafeAreaView>
     );
@@ -414,6 +475,7 @@ class PlayMainScreen extends PureComponent {
     onPressAvatar: this.onPressAvatar,
     onPressReport: this.onPressReport,
     onOpenProfileSheet: this.onOpenProfileSheet,
+    onPressGiftAction: this.onPressGiftAction,
   };
 
   _renderItem = ({ item, index }) => (
@@ -452,6 +514,7 @@ const styles = StyleSheet.create({
 export default connect(
   (state) => ({
     user: state.me?.user || {},
+    gifts: state.liveStream?.gifts || [],
   }),
-  { setMyUserAction },
+  { setMyUserAction, setGifts },
 )(PlayMainScreen);

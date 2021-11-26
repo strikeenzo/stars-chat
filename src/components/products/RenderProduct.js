@@ -246,14 +246,14 @@ class RenderProducts extends PureComponent {
               />
             </View>
           </View>
-          <View style={styles.viewCount}>
+          {/*<View style={styles.viewCount}>
             <CachedImage
               source={eye}
               style={styles.viewCountIcon}
               tintColor="white"
             />
             <Text style={GStyles.textSmall}>{viewCount}</Text>
-          </View>
+          </View>*/}
         </>
       </TouchableOpacity>
     );

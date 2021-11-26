@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+/*
 import Video from 'react-native-video';
+*/
+import VideoPlayer from '../../components/react-native-video-controls/VideoPlayer';
 
 import { GStyle, GStyles, Global } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
@@ -20,6 +23,7 @@ import Heart from '../../assets/lottie/heart';
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
 const ic_comment = require('../../assets/images/Icons/ic_comment.png');
+import ic_gift from '../../assets/images/Icons/ic_gift.png';
 const ic_share = require('../../assets/images/Icons/ic_share.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
@@ -35,7 +39,6 @@ class RenderPosts extends PureComponent {
       showHeart: false,
       paused: false,
     };
-    this.player = React.createRef();
   }
 
   componentWillUpdate(
@@ -128,13 +131,18 @@ class RenderPosts extends PureComponent {
       >
         <>
           {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
-            <Video
-              ref={this.player}
+            <VideoPlayer
               source={{
                 uri: Global.convertToHLS(item.url || ''),
               }}
+              controls={false}
+              seekColor={'#ff0000'}
+              disableVolume={true}
+              disableBack={true}
+              disableFullscreen={true}
+              disableTimer={false}
+              disablePlayPause={true}
               repeat
-              maxBitRate={9000000}
               paused={paused}
               muted={paused}
               poster={item.thumb}
@@ -200,20 +208,20 @@ class RenderPosts extends PureComponent {
               {this.checkIfBlockedMe(user) ||
               this.checkIfBlocked(user) ? null : (
                 <TouchableOpacity
-                  onPress={this.onPressComments}
+                  onPress={actions.onPressGiftAction}
                   style={GStyles.videoActionButton}
                 >
                   <CachedImage
-                    source={ic_comment}
+                    source={ic_gift}
                     style={GStyles.actionIcons}
                     tintColor={'white'}
                   />
                 </TouchableOpacity>
               )}
-              {this.checkIfBlockedMe(user) ||
-              this.checkIfBlocked(user) ? null : (
-                <Text style={GStyles.textSmall}>{item.commentsCount || 0}</Text>
-              )}
+              {/*{this.checkIfBlockedMe(user) ||*/}
+              {/*this.checkIfBlocked(user) ? null : (*/}
+              {/*  <Text style={GStyles.textSmall}>{item.commentsCount || 0}</Text>*/}
+              {/*)}*/}
 
               <TouchableOpacity
                 onPress={actions.onPressShare}
@@ -242,14 +250,14 @@ class RenderPosts extends PureComponent {
             >
               <Text style={GStyles.textSmall}>Report</Text>
             </TouchableOpacity>
-            <View style={styles.topBadge}>
+            {/*<View style={styles.topBadge}>
               <CachedImage
                 source={eye}
                 style={styles.viewCountIcon}
                 tintColor="white"
               />
               <Text style={GStyles.textSmall}>{viewCount}</Text>
-            </View>
+            </View>*/}
           </View>
         </>
       </TouchableOpacity>

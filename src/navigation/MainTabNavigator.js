@@ -61,7 +61,7 @@ const MainTabNavigator = (props) => {
           backgroundColor: 'black',
           borderTopColor: 'grey',
           borderTopWidth: 0.5,
-          position: 'absolute',
+          position: 'relative',
           elevation: 1,
         },
         showLabel: false,

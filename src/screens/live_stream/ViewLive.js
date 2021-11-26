@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Alert,
-  StatusBar,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Alert, StatusBar, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
@@ -13,7 +8,6 @@ import KeepAwake from 'react-native-keep-awake';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import Index from '../../components/LiveStream/LiveStreamFooter';
-import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Gifts from '../../components/LiveStream/Gifts';
 import Header from '../../components/LiveStream/Header';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
@@ -68,11 +62,11 @@ class ViewLive extends Component {
       }
     });
 
-    RestAPI.get_gifts({ userId: this.props.user?.id }, (json, error) => {
+    /*RestAPI.get_gifts({ userId: this.props.user?.id }, (json, error) => {
       if (json?.status === 200 || json?.data) {
         this.props.setGifts(json.data.gifts || []);
       }
-    });
+    });*/
 
     KeepAwake.activate();
   }
@@ -369,7 +363,6 @@ class ViewLive extends Component {
     const { messages, isJoined, showHeart, countHeart } = this.state;
     const room = this.state.room || {};
     const liveStatus = room?.liveStatus || 0;
-    const gifts = this.props.gifts || [];
     const mode = room?.mode || 0;
 
     return (
@@ -436,7 +429,7 @@ class ViewLive extends Component {
             draggableIcon: styles.sheetDragIcon,
           }}
         >
-          <Gifts gifts={gifts} onPressSendGift={this.onPressSendGift} />
+          <Gifts onPressSendGift={this.onPressSendGift} />
         </RBSheet>
         {/*<FloatingHearts count={countHeart} />*/}
         {showHeart && <StaticHeart />}

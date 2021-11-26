@@ -278,6 +278,10 @@ const RestAPI = {
     formDataCall('api/post/like', data, {}, callBack, 'put');
   },
 
+  send_gift_post: (params, callback) => {
+    formDataCall('api/post/gift', params, {}, callback, 'put');
+  },
+
   report_post: (params, callBack) => {
     const data = {
       userId: params.userId,
