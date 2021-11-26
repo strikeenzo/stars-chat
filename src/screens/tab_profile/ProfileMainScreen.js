@@ -50,15 +50,15 @@ const getMenuItems = (navigation, setMyUserAction) => {
         navigation.navigate('go_live');
       },
     },
-    {
-      icon: ic_my_products,
-      title: 'My Products',
-      hideGuest: true,
-      key: 'products',
-      onPress: () => {
-        navigation.navigate('my_products');
-      },
-    },
+    // {
+    //   icon: ic_my_products,
+    //   title: 'My Products',
+    //   hideGuest: true,
+    //   key: 'products',
+    //   onPress: () => {
+    //     navigation.navigate('my_products');
+    //   },
+    // },
     {
       icon: ic_my_videos,
       title: 'My Videos',
@@ -68,14 +68,14 @@ const getMenuItems = (navigation, setMyUserAction) => {
         navigation.navigate('my_posts');
       },
     },
-    {
-      icon: ic_menu_saved_products,
-      title: 'Liked Products',
-      key: 'products',
-      onPress: () => {
-        navigation.navigate('saved_products');
-      },
-    },
+    // {
+    //   icon: ic_menu_saved_products,
+    //   title: 'Liked Products',
+    //   key: 'products',
+    //   onPress: () => {
+    //     navigation.navigate('saved_products');
+    //   },
+    // },
     {
       icon: ic_menu_messages,
       title: 'Messages',
@@ -294,7 +294,6 @@ class ProfileMainScreen extends React.Component {
                 style={{
                   width: '80%',
                   flexDirection: 'row',
-                  alignSelf: 'flex-start',
                   marginTop: 10,
                   marginBottom: 50,
                   alignSelf:

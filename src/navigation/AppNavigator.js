@@ -99,8 +99,12 @@ export default function App() {
         <Stack.Screen name="profile_check" component={CheckMyProfile} />
         <Stack.Screen name="fans_screen" component={FansScreen} />
         <Stack.Screen name="following_users" component={FollowingUsersScreen} />
+        {/*
         <Stack.Screen name="saved_products" component={SavedProductsScreen} />
+*/}
+        {/*
         <Stack.Screen name="my_products" component={MyVideoScreen} />
+*/}
         <Stack.Screen name="my_posts" component={MyPostsScreen} />
         <Stack.Screen name="post_comments" component={CommentsScreen} />
         <Stack.Screen name="profile_video" component={ProfileVideoScreen} />
