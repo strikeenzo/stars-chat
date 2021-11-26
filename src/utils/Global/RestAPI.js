@@ -143,6 +143,16 @@ const RestAPI = {
     formDataCall('api/post/newPosts', data, {}, callBack, 'get');
   },
 
+  get_all_post_list: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      amount: params.amount,
+      page: params.page,
+    };
+
+    formDataCall('api/post/allPost', data, {}, callBack, 'get');
+  },
+
   get_all_comment_list: (params, callBack) => {
     const data = {
       postId: params.postId,
