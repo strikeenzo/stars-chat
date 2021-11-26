@@ -54,8 +54,10 @@ class FansScreen extends React.Component {
     if (type === 'init') {
       //global.showForcePageLoader(true);
     } else {
-      this.setState({ isFetching: true });
+      //this.setState({ isFetching: true });
     }
+    this.setState({ isFetching: true });
+
     let params = {
       userId: global.me ? global.me?.id : 0,
       page_number: type === 'more' ? curPage : '1',
@@ -67,6 +69,7 @@ class FansScreen extends React.Component {
       } else {
         this.setState({ isFetching: false });
       }
+      this.setState({ isFetching: false });
 
       if (err !== null) {
         Helper.alertNetworkError();
@@ -124,7 +127,7 @@ class FansScreen extends React.Component {
 
     return (
       <View style={{ width: '100%', paddingTop: 16 }}>
-        {itemDatas?.length ? (
+        {itemDatas?.length || isFetching ? (
           <FlatList
             ref={(ref) => {
               this.flatListRef = ref;
