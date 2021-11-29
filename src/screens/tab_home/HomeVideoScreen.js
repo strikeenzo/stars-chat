@@ -6,7 +6,7 @@ import { Constants, Helper, RestAPI } from '../../utils/Global';
 import GStyle, { GStyles } from '../../utils/Global/Styles';
 import ProductsList from '../../components/elements/ProductsList';
 import Avatar from '../../components/elements/Avatar';
-import PostItem from "../../components/elements/PostItem";
+import PostItem from '../../components/elements/PostItem';
 
 const HomeVideoScreen = (props) => {
   const { category } = props;
@@ -97,7 +97,6 @@ const HomeVideoScreen = (props) => {
   };
 
   const onPressVideo = (item) => {
-
     global._selIndex = posts.findIndex((obj) => obj.id === item?.id);
     global._postsList = posts;
     global._prevScreen = 'home_main_video';
@@ -122,6 +121,7 @@ const HomeVideoScreen = (props) => {
             />
           ))}
         </View>
+        <Text style={styles.recentTextLabel}>Recently watched</Text>
         {posts?.length ? (
           <ProductsList
             products={posts}
@@ -225,6 +225,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignSelf: 'center',
     marginBottom: 10,
+  },
+  recentTextLabel: {
+    ...GStyles.regularText,
+    ...GStyles.boldText,
+    color: '#D2D2D2',
+    alignSelf: 'center',
+    marginVertical: 12,
   },
 });
 
