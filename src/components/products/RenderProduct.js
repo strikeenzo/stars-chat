@@ -116,7 +116,7 @@ class RenderProducts extends PureComponent {
         onPress={this.onPress}
       >
         <>
-          {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
+          {Math.abs(curIndex - index) < 5 && !isVideoPause ? (
             <Video
               source={{
                 uri: Global.convertToHLS(item.url || ''),

@@ -187,9 +187,9 @@ class ProfileVideoScreen extends Component {
             index,
           })}
           pagingEnabled
-          initialNumToRender={3}
-          maxToRenderPerBatch={3}
-          windowSize={7}
+          initialNumToRender={4}
+          maxToRenderPerBatch={4}
+          windowSize={9}
           removeClippedSubviews={false}
           refreshing={isFetching}
           onEndReachedThreshold={0.4}

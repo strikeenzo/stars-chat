@@ -6,9 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-/*
 import Video from 'react-native-video';
-*/
 import VideoPlayer from '../../components/react-native-video-controls/VideoPlayer';
 
 import { GStyle, GStyles, Global } from '../../utils/Global';
@@ -130,7 +128,7 @@ class RenderPosts extends PureComponent {
         onPress={this.onPress}
       >
         <>
-          {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
+          {Math.abs(curIndex - index) < 5 && !isVideoPause ? (
             <VideoPlayer
               source={{
                 uri: Global.convertToHLS(item.url || ''),

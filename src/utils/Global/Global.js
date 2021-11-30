@@ -245,10 +245,7 @@ const Global = {
   },
   convertToHLS: (url) => {
     return url
-      ?.replace(
-        'video/upload/',
-        'video/upload/q_auto,vc_h264:baseline:3.1/',
-      )
+      ?.replace('video/upload/', 'video/upload/q_auto:good/')
       ?.replace(/\.[^/.]+$/, '.m3u8');
   },
   openEditor: async (videoUri) => {
