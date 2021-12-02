@@ -731,6 +731,12 @@ export default class VideoPlayer extends Component {
       });
     }
 
+    if (this.state.muted !== nextProps.muted) {
+      this.setState({
+        muted: nextProps.muted,
+      });
+    }
+
     if (this.styles.videoStyle !== nextProps.videoStyle) {
       this.styles.videoStyle = nextProps.videoStyle;
     }
@@ -993,10 +999,16 @@ export default class VideoPlayer extends Component {
     return (
       <View style={styles.volume.container}>
         <View
-          style={[styles.volume.fill, { width: this.state.volumeFillWidth || 0 }]}
+          style={[
+            styles.volume.fill,
+            { width: this.state.volumeFillWidth || 0 },
+          ]}
         />
         <View
-          style={[styles.volume.track, { width: this.state.volumeTrackWidth || 0 }]}
+          style={[
+            styles.volume.track,
+            { width: this.state.volumeTrackWidth || 0 },
+          ]}
         />
         <View
           style={[

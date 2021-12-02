@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  BackHandler,
   Dimensions,
   FlatList,
   Platform,
@@ -62,6 +63,24 @@ class PostsScreen extends Component {
       layout: { width: 0, height: 0 },
     };
   };
+
+  componentDidMount() {
+    global.checkSignIn = this.checkSignIn;
+    this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
+      this.setState({ isVideoPause: false });
+    });
+    this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
+      this.setState({ isVideoPause: true });
+    });
+    BackHandler.addEventListener('hardwareBackPress', this.onBack);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFocus && this.unsubscribeFocus();
+    this.unsubscribeBlur && this.unsubscribeBlur();
+    global.checkSignIn = null;
+    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
+  }
 
   onBack = () => {
     this.props.navigation.goBack();

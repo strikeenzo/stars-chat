@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+/*
 import Video from 'react-native-video';
+*/
 import VideoPlayer from '../../components/react-native-video-controls/VideoPlayer';
 
 import { GStyle, GStyles, Global } from '../../utils/Global';
@@ -135,7 +137,6 @@ class RenderPosts extends PureComponent {
               }}
               controls={false}
               seekColor={'#ff0000'}
-              disableVolume={true}
               disableBack={true}
               disableFullscreen={true}
               disableTimer={false}
