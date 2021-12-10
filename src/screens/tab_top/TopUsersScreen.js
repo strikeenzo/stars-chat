@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -23,7 +23,7 @@ import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view';
 import Avatar from '../../components/elements/Avatar';
-import TextTicker from 'react-native-text-ticker'
+import TextTicker from 'react-native-text-ticker';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 32) / 3.0;
@@ -36,14 +36,14 @@ class TopUsersScreen extends React.Component {
   }
 
   componentDidMount() {
-  /*   this.unsubscribe = this.props.navigation.addListener('focus', () => {
+    /*   this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.setLightStatusBar();
     }); */
     this.onRefresh('init');
     this.getSelectedTopUsers();
   }
 
- /*  componentWillUnmount() {
+  /*  componentWillUnmount() {
     this.unsubscribe();
   } */
 
@@ -172,9 +172,9 @@ class TopUsersScreen extends React.Component {
     return (
       <View style={GStyles.darkContainer}>
         <StatusBar hidden />
-          {this._renderHeader()}
-          {this._renderTab()}
-          {this._renderUserList()}
+        {this._renderHeader()}
+        {this._renderTab()}
+        {this._renderUserList()}
       </View>
     );
   }
@@ -191,22 +191,28 @@ class TopUsersScreen extends React.Component {
         />
         {topPageText ? (
           <View style={styles.banner}>
-             <TextTicker
-          style={{ fontSize: 20 , backgroundColor: 'black', color: '#D2D2D2', fontFamily: 'DMSans-medium'}}
-          duration={6000}
-          loop
-          bounce
-          repeatSpacer={0}
-          marqueeDelay={1000}
-        >
-         {topPageText}
-        </TextTicker>
+            <TextTicker
+              style={{
+                fontSize: 20,
+                backgroundColor: 'black',
+                color: '#D2D2D2',
+                paddingLeft: 8,
+                fontFamily: 'DMSans-medium',
+              }}
+              duration={6000}
+              loop
+              bounce
+              repeatSpacer={0}
+              marqueeDelay={1000}
+            >
+              {topPageText}
+            </TextTicker>
           </View>
         ) : null}
         <View style={styles.avatars}>
           {topUsers.map((item) => (
             <Avatar
-            size={50}
+              size={50}
               key={item.id}
               image={{ uri: item?.photo }}
               onPress={() => this.onPressUser(item)}
@@ -335,15 +341,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '86%',
     justifyContent: 'space-between',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   banner: {
-    backgroundColor: GStyle.grayBackColor,
     width: '100%',
     marginBottom: 10,
     height: 40,
     backgroundColor: 'black',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   statisticsWrapper: {
     ...GStyles.centerAlign,
@@ -368,8 +373,7 @@ const styles = StyleSheet.create({
     height: '12%',
     marginTop: 16,
     backgroundColor: '#2A2B2F',
-    justifyContent: 'center'
-
+    justifyContent: 'center',
   },
   tabView: {
     backgroundColor: '#35393F',
@@ -398,13 +402,13 @@ export default forwardRef((props, ref) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
-    <TopUsersScreen
-      {...props}
-      ref={ref}
-      navigation={navigation}
-      route={route}
-    />
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
+      <TopUsersScreen
+        {...props}
+        ref={ref}
+        navigation={navigation}
+        route={route}
+      />
     </View>
   );
 });

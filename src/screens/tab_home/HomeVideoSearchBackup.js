@@ -1,10 +1,13 @@
-import React, {forwardRef} from 'react';
-import {Text, View} from 'react-native';
-import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
+import React, { forwardRef } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 
-import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
+import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import ProductsList from '../../components/elements/ProductsList';
-import PostItem from '../../components/elements/PostItem';
 
 class HomeVideoSearch extends React.Component {
   constructor(props) {
@@ -72,7 +75,7 @@ class HomeVideoSearch extends React.Component {
       count_per_page: Constants.COUNT_PER_PAGE,
       keyword,
     };
-    RestAPI.get_searched_post_list(params, (json, err) => {
+    RestAPI.get_searched_video_list(params, (json, err) => {
       global.showForcePageLoader(false);
 
       this.setState({ isFetching: false });
@@ -83,10 +86,10 @@ class HomeVideoSearch extends React.Component {
         if (json.status === 200) {
           this.setState({ totalCount: json.data.totalCount });
           if (type === 'more') {
-            let data = itemDatas.concat(json.data.postList);
+            let data = itemDatas.concat(json.data.videoList);
             this.setState({ itemDatas: data });
           } else {
-            this.setState({ itemDatas: json.data.postList });
+            this.setState({ itemDatas: json.data.videoList });
           }
         } else {
           Helper.alertServerDataError();
@@ -99,17 +102,22 @@ class HomeVideoSearch extends React.Component {
     this.flatListRef?.scrollToOffset({ animated: false, offset: 0 });
   };
 
-  renderItem = ({ item, index }) => {
-    return <PostItem item={item} onPress={this.onPressVideo} index={index} />;
-  };
-
   onPressVideo = (item) => {
-    const { itemDatas } = this.state;
+    const { itemDatas, curPage, totalCount } = this.state;
+    const { keyword } = this.props;
 
-    global._selIndex = itemDatas.findIndex((obj) => obj.id === item?.id);
-    global._postsList = itemDatas;
+    const selIndex = itemDatas.findIndex((obj) => obj.id === item?.id);
+    // let newAfterItemDatas = itemDatas.slice(selIndex);
+    // let newBeforeItemDatas = itemDatas.slice(0, selIndex);
+    // global._myVideoDatas = [...newAfterItemDatas, ...newBeforeItemDatas];
+
+    global._curPage = curPage;
+    global._totalCount = totalCount;
+    global._keyword = keyword;
+    global._selIndex = selIndex;
+    global._productsList = itemDatas;
     global._prevScreen = 'home_main_video';
-    const pushAction = StackActions.push('post_detail', null);
+    const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);
   };
 
@@ -138,14 +146,15 @@ class HomeVideoSearch extends React.Component {
               this.flatListRef = ref;
             }}
             onRefresh={this.onRefresh}
-            renderItem={this.renderItem}
             isFetching={isFetching}
+            onPressVideo={this.onPressVideo}
             onEndReachedDuringMomentum={onEndReachedDuringMomentum}
             setOnEndReachedDuringMomentum={this.setOnEndReachedDuringMomentum}
           />
         ) : (
           <View style={{ flex: 1, ...GStyles.centerAlign }}>
             <Text style={GStyles.notifyDescription}>
+              {' '}
               {isFetching ? '' : 'Not found.'}
             </Text>
           </View>
@@ -154,6 +163,8 @@ class HomeVideoSearch extends React.Component {
     );
   };
 }
+
+const styles = StyleSheet.create({});
 
 const THomeVideoSearch = forwardRef((props, ref) => {
   let navigation = useNavigation();

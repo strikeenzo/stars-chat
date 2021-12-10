@@ -731,6 +731,12 @@ export default class VideoPlayer extends Component {
       });
     }
 
+    if (this.state.muted !== nextProps.muted) {
+      this.setState({
+        muted: nextProps.muted,
+      });
+    }
+
     if (this.styles.videoStyle !== nextProps.videoStyle) {
       this.styles.videoStyle = nextProps.videoStyle;
     }
@@ -993,13 +999,22 @@ export default class VideoPlayer extends Component {
     return (
       <View style={styles.volume.container}>
         <View
-          style={[styles.volume.fill, { width: this.state.volumeFillWidth }]}
+          style={[
+            styles.volume.fill,
+            { width: this.state.volumeFillWidth || 0 },
+          ]}
         />
         <View
-          style={[styles.volume.track, { width: this.state.volumeTrackWidth }]}
+          style={[
+            styles.volume.track,
+            { width: this.state.volumeTrackWidth || 0 },
+          ]}
         />
         <View
-          style={[styles.volume.handle, { left: this.state.volumePosition }]}
+          style={[
+            styles.volume.handle,
+            { left: this.state.volumePosition || 0 },
+          ]}
           {...this.player.volumePanResponder.panHandlers}
         >
           <Image
@@ -1089,7 +1104,7 @@ export default class VideoPlayer extends Component {
             style={[
               styles.seekbar.fill,
               {
-                width: this.state.seekerFillWidth,
+                width: this.state.seekerFillWidth || 0,
                 backgroundColor: this.props.seekColor || '#FFF',
               },
             ]}
@@ -1097,7 +1112,10 @@ export default class VideoPlayer extends Component {
           />
         </View>
         <View
-          style={[styles.seekbar.handle, { left: this.state.seekerPosition }]}
+          style={[
+            styles.seekbar.handle,
+            { left: this.state.seekerPosition || 0 },
+          ]}
           pointerEvents={'none'}
         >
           <View
@@ -1230,7 +1248,7 @@ export default class VideoPlayer extends Component {
             source={this.props.source}
           />
           {this.renderError()}
-          {this.renderLoader()}
+          {/*{this.renderLoader()}*/}
           {this.renderTopControls()}
           {this.renderBottomControls()}
         </View>

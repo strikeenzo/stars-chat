@@ -6,7 +6,6 @@ import { Constants, Helper, RestAPI } from '../../utils/Global';
 import GStyle, { GStyles } from '../../utils/Global/Styles';
 import ProductsList from '../../components/elements/ProductsList';
 import Avatar from '../../components/elements/Avatar';
-import PostItem from '../../components/elements/PostItem';
 
 const HomeVideoScreen = (props) => {
   const { category } = props;
@@ -16,7 +15,7 @@ const HomeVideoScreen = (props) => {
   const [currentSubCategory, setCurrentSubCategory] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const [curPage, setCurPage] = useState(1);
-  const [posts, setPosts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [topUsers, setTopUsers] = useState([]);
   const [onEndReachedDuringMomentum, setOnEndReachedDuringMomentum] = useState(
     true,
@@ -42,11 +41,9 @@ const HomeVideoScreen = (props) => {
   useEffect(() => {
     onRefresh('init');
   }, [currentSubCategory]);
-
   useEffect(() => {
     getSelectedTopUsers();
   }, []);
-
   const onRefresh = (type) => {
     if (isFetching) {
       return;
@@ -70,11 +67,13 @@ const HomeVideoScreen = (props) => {
       setIsFetching(true);
     }
     let params = {
-      userId: global.me ? global.me?.id : '',
-      page: type === 'more' ? newPage : '1',
-      amount: Constants.COUNT_PER_PAGE,
+      user_id: global.me ? global.me?.id : '',
+      page_number: type === 'more' ? newPage : '1',
+      count_per_page: Constants.COUNT_PER_PAGE,
+      category: category?.id,
+      subCategory: currentSubCategory?.id,
     };
-    RestAPI.get_all_post_list(params, (json, err) => {
+    RestAPI.get_category_video_list(params, (json, err) => {
       global.showForcePageLoader(false);
       setIsFetching(false);
 
@@ -84,10 +83,10 @@ const HomeVideoScreen = (props) => {
         if (json.status === 200) {
           setTotalCount(json.data.totalCount || 0);
           if (type === 'more') {
-            let data = posts.concat(json.data.postList || []);
-            setPosts(data);
+            let data = products.concat(json.data.videoList || []);
+            setProducts(data);
           } else {
-            setPosts(json.data.postList || []);
+            setProducts(json.data.videoList || []);
           }
         } else {
           Helper.alertServerDataError();
@@ -97,15 +96,15 @@ const HomeVideoScreen = (props) => {
   };
 
   const onPressVideo = (item) => {
-    global._selIndex = posts.findIndex((obj) => obj.id === item?.id);
-    global._postsList = posts;
-    global._prevScreen = 'home_main_video';
-    const pushAction = StackActions.push('post_detail', null);
-    props.navigation.dispatch(pushAction);
-  };
+    const selIndex = products.findIndex((obj) => obj.id === item?.id);
 
-  const renderItem = ({ item, index }) => {
-    return <PostItem item={item} onPress={onPressVideo} index={index} />;
+    global._curPage = curPage;
+    global._totalCount = totalCount;
+    global._selIndex = selIndex;
+    global._productsList = products;
+    global._prevScreen = 'home_main_video';
+    const pushAction = StackActions.push('profile_video', null);
+    navigation.dispatch(pushAction);
   };
 
   const _renderVideo = () => {
@@ -121,14 +120,13 @@ const HomeVideoScreen = (props) => {
             />
           ))}
         </View>
-        <Text style={styles.recentTextLabel}>Recently watched</Text>
-        {posts?.length ? (
+        {products?.length ? (
           <ProductsList
-            products={posts}
+            products={products}
             ref={flatListRef}
             onRefresh={onRefresh}
             isFetching={isFetching}
-            renderItem={renderItem}
+            onPressVideo={onPressVideo}
             onEndReachedDuringMomentum={onEndReachedDuringMomentum}
             setOnEndReachedDuringMomentum={setOnEndReachedDuringMomentum}
           />
@@ -225,13 +223,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignSelf: 'center',
     marginBottom: 10,
-  },
-  recentTextLabel: {
-    ...GStyles.regularText,
-    ...GStyles.boldText,
-    color: '#D2D2D2',
-    alignSelf: 'center',
-    marginVertical: 12,
   },
 });
 

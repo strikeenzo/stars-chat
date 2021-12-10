@@ -121,6 +121,17 @@ const RestAPI = {
     formDataCall('api/video/likedVideos', data, {}, callBack, 'get');
   },
 
+  get_searched_post_list: (params, callBack) => {
+    let data = {
+      userId: params.user_id,
+      page: params.page_number,
+      amount: params.count_per_page,
+      keyword: params.keyword,
+    };
+
+    formDataCall('api/post/searchPost', data, {}, callBack, 'get');
+  },
+
   get_new_post_list: (params, callBack) => {
     const data = {
       userId: params.userId,
@@ -130,6 +141,16 @@ const RestAPI = {
     };
 
     formDataCall('api/post/newPosts', data, {}, callBack, 'get');
+  },
+
+  get_all_post_list: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      amount: params.amount,
+      page: params.page,
+    };
+
+    formDataCall('api/post/allPost', data, {}, callBack, 'get');
   },
 
   get_all_comment_list: (params, callBack) => {

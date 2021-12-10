@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import {Keyboard, StyleSheet} from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
 import { GStyles } from '../../utils/Global';
@@ -27,6 +27,13 @@ export default class SearchBarItem extends Component {
     return <CachedImage tintColor='#D2D2D2' source={ic_search} style={{ width: 16, height: 16 }} />;
   };
 
+
+  onBlur = () => {
+    setTimeout(() => {
+      Keyboard.dismiss();
+    }, 200);
+  };
+
   render() {
     const { searchText } = this.props;
 
@@ -35,6 +42,7 @@ export default class SearchBarItem extends Component {
         lightTheme
         searchIcon={this.searchImage}
         onChangeText={(text) => this.onSearchFilter(text)}
+        onBlur={this.onBlur}
         onClear={(text) => this.onSearchFilter('')}
         placeholder="Search"
         value={searchText}

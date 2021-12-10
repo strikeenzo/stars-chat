@@ -33,7 +33,7 @@ class Component extends React.Component {
   }
 
   componentDidMount(): void {
-    this.interval = setInterval(this.onRandomProduct, 30000);
+    //this.interval = setInterval(this.onRandomProduct, 30000);
   }
 
   componentWillUnmount(): void {
@@ -53,7 +53,7 @@ class Component extends React.Component {
             randomProduct,
           });
         } else {
-          Helper.alertServerDataError();
+          //Helper.alertServerDataError();
         }
       }
     });

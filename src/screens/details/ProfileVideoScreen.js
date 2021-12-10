@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {
+  BackHandler,
   Dimensions,
   FlatList,
-  Platform, SafeAreaView,
+  Platform,
+  SafeAreaView,
   StatusBar,
   TouchableOpacity,
   View,
@@ -46,6 +48,24 @@ class ProfileVideoScreen extends Component {
       layout: { width: 0, height: 0 },
     };
   };
+
+  componentDidMount() {
+    global.checkSignIn = this.checkSignIn;
+    this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
+      this.setState({ isVideoPause: false });
+    });
+    this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
+      this.setState({ isVideoPause: true });
+    });
+    BackHandler.addEventListener('hardwareBackPress', this.onBack);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFocus && this.unsubscribeFocus();
+    this.unsubscribeBlur && this.unsubscribeBlur();
+    global.checkSignIn = null;
+    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
+  }
 
   onBack = () => {
     this.props.navigation.goBack();
@@ -187,9 +207,9 @@ class ProfileVideoScreen extends Component {
             index,
           })}
           pagingEnabled
-          initialNumToRender={3}
-          maxToRenderPerBatch={3}
-          windowSize={7}
+          initialNumToRender={4}
+          maxToRenderPerBatch={4}
+          windowSize={9}
           removeClippedSubviews={false}
           refreshing={isFetching}
           onEndReachedThreshold={0.4}

@@ -422,9 +422,9 @@ class PlayMainScreen extends PureComponent {
         <FlatList
           showsVerticalScrollIndicator={false}
           pagingEnabled
-          initialNumToRender={3}
-          maxToRenderPerBatch={3}
-          windowSize={7}
+          initialNumToRender={4}
+          maxToRenderPerBatch={4}
+          windowSize={9}
           onRefresh={this.pullRefresh}
           refreshing={isFetching}
           ListFooterComponent={this._renderFooter}

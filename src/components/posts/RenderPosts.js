@@ -130,14 +130,13 @@ class RenderPosts extends PureComponent {
         onPress={this.onPress}
       >
         <>
-          {Math.abs(curIndex - index) < 3 && !isVideoPause ? (
+          {Math.abs(curIndex - index) < 5 && !isVideoPause ? (
             <VideoPlayer
               source={{
                 uri: Global.convertToHLS(item.url || ''),
               }}
               controls={false}
               seekColor={'#ff0000'}
-              disableVolume={true}
               disableBack={true}
               disableFullscreen={true}
               disableTimer={false}

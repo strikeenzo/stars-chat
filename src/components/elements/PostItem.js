@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    aspectRatio: 1,
+    aspectRatio: 0.6211,
   },
   infoWrapper: {
     width: '100%',
